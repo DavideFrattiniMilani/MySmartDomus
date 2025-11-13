@@ -9,7 +9,6 @@ import {
   Dimensions,
   PanResponder,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import { COLORS } from '../constants/colors';
 

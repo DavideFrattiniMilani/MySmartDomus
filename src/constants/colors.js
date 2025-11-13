@@ -1,31 +1,45 @@
-// Palette colori dell'app MySmart Domus
+// src/constants/colors.js
+// Colori aggiornati secondo le linee guida MySmartDomus
+
 export const COLORS = {
-  // Colori principali
-  primary: '#FF9F5A',        // Arancione bottoni
-  primaryDark: '#E88A45',    // Arancione più scuro (per pressed state)
+  // ===== PRIMARY COLORS =====
+  primary: '#FFA74F',        // Orange (aggiornato dalle linee guida)
+  primaryDark: '#E88A45',    // Orange più scuro (per pressed state)
   
-  // Sfondi
-  background: '#1A1A1A',     // Nero/grigio scuro principale
+  // ===== BACKGROUNDS =====
+  background: '#000000',     // Black (dalle linee guida)
   backgroundLight: '#2A2A2A', // Grigio leggermente più chiaro
-  cardBackground: '#2D2D2D',  // Sfondo card ville
+  cardBackground: '#2D2D2D',  // Sfondo card
   
-  // Testi
+  // ===== TEXTS =====
+  white: '#FFFFFF',          // White
   textPrimary: '#FFFFFF',    // Bianco per testi principali
   textSecondary: '#B0B0B0',  // Grigio per testi secondari
-  textOrange: '#FF9F5A',     // Arancione per testi speciali
+  textOrange: '#FFA74F',     // Orange per testi speciali
   
-  // Input
+  // ===== INPUT =====
   inputBackground: '#3A3A3A', // Sfondo input
   inputBorder: '#4A4A4A',     // Bordo input
   inputPlaceholder: '#808080', // Testo placeholder
   
-  // Badge
-  badgeBackground: 'rgba(255, 255, 255, 0.2)', // Sfondo badge semi-trasparente
-  badgeText: '#FFFFFF',       // Testo badge
+  // ===== MESSAGES - Error =====
+  error600: '#F34141',       // Error principale
+  error700: '#CD3636',       // Error scuro
   
-  // Utilità
-  white: '#FFFFFF',
+  // ===== MESSAGES - Warning =====
+  warning600: '#E9A23B',     // Warning principale
+  warning700: '#C8811A',     // Warning scuro
+  
+  // ===== MESSAGES - Success =====
+  success600: '#53B483',     // Success principale
+  success700: '#2F9461',     // Success scuro
+  
+  // ===== UTILITY =====
   black: '#000000',
   transparent: 'transparent',
-  overlay: 'rgba(0, 0, 0, 0.5)', // Overlay scuro per splash
+  overlay: 'rgba(0, 0, 0, 0.5)', // Overlay scuro
+  
+  // ===== BADGE =====
+  badgeBackground: 'rgba(255, 255, 255, 0.2)',
+  badgeText: '#FFFFFF',
 };

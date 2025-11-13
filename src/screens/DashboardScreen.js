@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
+import Icon from '../components/Icon';
 
 const { width } = Dimensions.get('window');
 
@@ -64,7 +65,7 @@ const DashboardScreen = ({ navigation, route }) => {
           onPress={() => navigation.goBack()}
           style={styles.iconButton}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.white} />
+          <Icon name="u_arrow-left" size={24} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Dashboard</Text>
         <View style={styles.placeholder} />
@@ -86,7 +87,7 @@ const DashboardScreen = ({ navigation, route }) => {
             }}
           >
             <Text style={styles.dropdownText}>{config.label}</Text>
-            <Ionicons name="chevron-down" size={20} color={COLORS.white} />
+            <Icon name="u_angle-down1" size={20} color={COLORS.white} />
           </TouchableOpacity>
         </View>
 
@@ -118,11 +119,11 @@ const DashboardScreen = ({ navigation, route }) => {
           {/* Date Navigation */}
           <View style={styles.dateNavigation}>
             <TouchableOpacity style={styles.dateArrow}>
-              <Ionicons name="chevron-back" size={20} color={COLORS.white} />
+              <Icon name="u_angle-left" size={20} color={COLORS.white} />
             </TouchableOpacity>
             <Text style={styles.dateText}>13 dicembre 2024</Text>
             <TouchableOpacity style={styles.dateArrow}>
-              <Ionicons name="chevron-forward" size={20} color={COLORS.white} />
+              <Icon name="u_angle-right" size={20} color={COLORS.white} />
             </TouchableOpacity>
           </View>
 

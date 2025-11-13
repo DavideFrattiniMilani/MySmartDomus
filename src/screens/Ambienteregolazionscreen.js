@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from '../components/Icon';
 import { COLORS } from '../constants/colors';
 import { getAmbienti, getPiani } from '../data';
 
@@ -66,7 +66,7 @@ const handleSave = () => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={28} color={COLORS.white} />
+          <Icon  name="u_angle-left" size={28} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Ambiente e regolazione</Text>
         <View style={{ width: 28 }} />
@@ -80,11 +80,11 @@ const handleSave = () => {
             onPress={() => setDropdownOpen(!dropdownOpen)}
           >
             <Text style={styles.dropdownButtonText}>{selectedPiano}</Text>
-            <Ionicons
-              name={dropdownOpen ? 'chevron-up' : 'chevron-down'}
-              size={20}
-              color={COLORS.primary}
-            />
+          <Icon
+            name={dropdownOpen ? 'u_angle-up' : 'u_angle-down1'}
+            size={20}
+            color={COLORS.primary}
+          />
           </TouchableOpacity>
 
           {dropdownOpen && (
@@ -142,7 +142,7 @@ const handleSave = () => {
                           ]}
                         >
                           {isDeviceSelected(ambiente.id, luce.id) && (
-                            <Ionicons name="checkmark" size={14} color={COLORS.white} />
+                            <Icon name="u_check" size={14} color={COLORS.white} />
                           )}
                         </View>
                         <Text style={styles.luceName}>{luce.nome}</Text>

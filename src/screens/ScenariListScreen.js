@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from '../components/Icon';
 import { COLORS } from '../constants/colors';
 import { useScenari } from '../context/ScenariContext';
 
@@ -16,18 +16,18 @@ const ScenariListScreen = ({ navigation, route }) => {
   const { getScenari, toggleScenario } = useScenari();
   const scenari = getScenari(villaId);
 
-  const getScenarioIcon = (tipo) => {
-    const iconMap = {
-      giorno: 'sunny',
-      notte: 'moon',
-      lavoro: 'briefcase',
-      festa: 'wine',
-      sport: 'barbell',
-      compleanni: 'gift',
-      barbecue: 'restaurant',
-    };
-    return iconMap[tipo] || 'settings';
+const getScenarioIcon = (tipo) => {
+  const iconMap = {
+    giorno: 'u_brightness-low',
+    notte: 'u_moon',
+    lavoro: 'u_book',
+    festa: 'u_glass-martini',
+    sport: 'u_dumbbell',
+    compleanni: 'u_star',
+    barbecue: 'u_utensils',
   };
+  return iconMap[tipo] || 'u_setting';
+};
 
   // Separa scenari preimpostati da quelli creati
   const scenariPreimpostati = scenari.filter(s => ['giorno', 'notte', 'lavoro'].includes(s.tipo));
@@ -49,11 +49,11 @@ const ScenariListScreen = ({ navigation, route }) => {
     >
       <View style={styles.scenarioContent}>
         <View style={styles.scenarioIcon}>
-          <Ionicons
-            name={getScenarioIcon(scenario.tipo)}
-            size={28}
-            color={COLORS.primary}
-          />
+        <Icon
+          name={getScenarioIcon(scenario.tipo)}
+          size={28}
+          color={COLORS.primary}
+        />
         </View>
         <View style={styles.scenarioInfo}>
           <Text style={styles.scenarioName}>{scenario.nome}</Text>
@@ -90,13 +90,13 @@ const ScenariListScreen = ({ navigation, route }) => {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={28} color={COLORS.white} />
-        </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Icon name="u_angle-left" size={28} color={COLORS.white} />
+      </TouchableOpacity>
         <Text style={styles.headerTitle}>Scenari</Text>
-        <TouchableOpacity onPress={handleCreaScenario}>
-          <Ionicons name="add" size={28} color={COLORS.white} />
-        </TouchableOpacity>
+      <TouchableOpacity onPress={handleCreaScenario}>
+        <Icon name="u_plus" size={28} color={COLORS.white} />
+      </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>

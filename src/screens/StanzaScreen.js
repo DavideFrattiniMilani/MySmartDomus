@@ -8,9 +8,9 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import DispositivoPanel from '../components/DispositivoPanel';
+import Icon from '../components/Icon';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,19 +29,19 @@ const StanzaScreen = ({ navigation, route }) => {
     left: index % 2 === 0 ? '30%' : '70%',
   }));
 
-  const getDeviceIcon = (tipo) => {
-    const iconMap = {
-      luce: 'bulb',
-      termostato: 'thermometer',
-      sensore: 'radio-button-on',
-      presa: 'power',
-      condizionatore: 'snow',
-      tapparella: 'albums',
-      telecamera: 'videocam',
-      lucchetto: 'lock-closed',
-    };
-    return iconMap[tipo] || 'ellipse';
+const getDeviceIcon = (tipo) => {
+  const iconMap = {
+    luce: 'u_lightbulb',
+    termostato: 'u_temperature-three-quarter',
+    sensore: 'u_wifi',
+    presa: 'u_power',
+    condizionatore: 'u_temperature-three-quarter',
+    tapparella: 'u_blinds',
+    telecamera: 'u_webcam',
+    lucchetto: 'u_lock-alt',
   };
+  return iconMap[tipo] || 'u_power'; // default
+};
 
   const handleDevicePress = (device) => {
     setSelectedDevice(device);
@@ -72,7 +72,7 @@ const StanzaScreen = ({ navigation, route }) => {
           <View style={styles.header}>
             <TouchableOpacity onPress={handleBackPress} style={styles.iconButton}>
               <View style={styles.iconButtonBg}>
-                <Ionicons name="arrow-back" size={24} color={COLORS.white} />
+                <Icon name="u_arrow-left" size={24} color={COLORS.white} />
               </View>
             </TouchableOpacity>
 
@@ -80,7 +80,7 @@ const StanzaScreen = ({ navigation, route }) => {
 
             <TouchableOpacity onPress={handleSettingsPress} style={styles.iconButton}>
               <View style={styles.iconButtonBg}>
-                <Ionicons name="settings-outline" size={24} color={COLORS.white} />
+                <Icon name="u_setting" size={24} color={COLORS.white} />
               </View>
             </TouchableOpacity>
           </View>
@@ -102,7 +102,7 @@ const StanzaScreen = ({ navigation, route }) => {
                 activeOpacity={0.7}
               >
                 <View style={styles.deviceIconInner}>
-                  <Ionicons
+                  <Icon
                     name={getDeviceIcon(device.tipo)}
                     size={24}
                     color={COLORS.white}

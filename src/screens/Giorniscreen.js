@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
+import Icon from '../components/Icon';
 
 const GiorniScreen = ({ navigation, route }) => {
   const { selectedDays: initialDays } = route.params || {};
@@ -45,7 +46,7 @@ const handleSave = () => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={28} color={COLORS.white} />
+          <Icon name="u_angle-left" size={28} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Giorni</Text>
         <View style={{ width: 28 }} />

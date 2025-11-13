@@ -10,9 +10,9 @@ import {
   ImageBackground,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import { useDrawer } from '../context/DrawerContext';
+ import Icon from '../components/Icon';
 
 const HomeCaseScreen = ({ navigation }) => {
 const { openDrawer } = useDrawer();
@@ -97,7 +97,7 @@ const handleMenuPress = () => {
       {/* Sezione stati sotto la card */}
       <View style={styles.statusContainer}>
         <View style={styles.statusRow}>
-          <Ionicons name="lock-closed" size={16} color={COLORS.white} />
+          <Icon name="u_lock-alt" size={16} color={COLORS.white} />
           <Text style={styles.statusLabel}>Antintrusione</Text>
           <View style={[styles.statusBadge, styles.statusActive]}>
             <View style={styles.statusDot} />
@@ -105,7 +105,7 @@ const handleMenuPress = () => {
           </View>
         </View>
         <View style={styles.statusRow}>
-          <Ionicons name="videocam" size={16} color={COLORS.white} />
+          <Icon name="u_webcam" size={16} color={COLORS.white} />
           <Text style={styles.statusLabel}>TVCC</Text>
           <View style={[styles.statusBadge, styles.statusActive]}>
             <View style={styles.statusDot} />
@@ -123,14 +123,14 @@ const handleMenuPress = () => {
       {/* Header */}
       <View style={styles.header}>
       <TouchableOpacity onPress={handleMenuPress} style={styles.iconButton}>
-        <Ionicons name="menu" size={28} color={COLORS.white} />
+        <Icon name="u_bars" size={28} color={COLORS.white} />
       </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Scegli una casa</Text>
 
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={handleNotificationPress} style={styles.iconButton}>
-            <Ionicons name="notifications-outline" size={24} color={COLORS.white} />
+            <Icon name="u_bell" size={24} color={COLORS.white} />
             <View style={styles.notificationBadge}>
               <Text style={styles.notificationBadgeText}>3</Text>
             </View>

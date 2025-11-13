@@ -8,7 +8,7 @@ import {
   StatusBar,
   Image,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from '../components/Icon';
 import { COLORS } from '../constants/colors';
 import RoomCard from '../components/RoomCard';
 import FloorDropdown from '../components/FloorDropdown';
@@ -56,7 +56,7 @@ const AmbientiScreen = ({ navigation, route }) => {
           onPress={() => navigation.goBack()} 
           style={styles.iconButton}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.white} />
+          <Icon name="u_arrow-left" size={24} color={COLORS.white} />
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Ambienti</Text>
@@ -66,7 +66,7 @@ const AmbientiScreen = ({ navigation, route }) => {
             onPress={handleNotificationPress}
             style={styles.iconButton}
           >
-            <Ionicons name="notifications-outline" size={24} color={COLORS.white} />
+            <Icon name="u_bell" size={24} color={COLORS.white} />
             <View style={styles.notificationBadge}>
               <Text style={styles.notificationBadgeText}>3</Text>
             </View>
@@ -102,7 +102,7 @@ const AmbientiScreen = ({ navigation, route }) => {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <Ionicons name="home-outline" size={64} color={COLORS.textSecondary} />
+              <Icon name="u_home-alt" size={24} color={COLORS.white} />
               <Text style={styles.emptyText}>
                 Nessuna stanza in questo piano
               </Text>

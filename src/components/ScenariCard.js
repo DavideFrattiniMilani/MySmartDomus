@@ -1,22 +1,22 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from './Icon';
 import { COLORS } from '../constants/colors';
 
 const ScenariCard = ({ scenari, onToggleScenario, onCreateNew }) => {
   // Mappa icone per tipo scenario
-  const getScenarioIcon = (tipo) => {
-    switch (tipo) {
-      case 'giorno':
-        return 'sunny';
-      case 'notte':
-        return 'moon';
-      case 'lavoro':
-        return 'briefcase';
-      default:
-        return 'home';
-    }
-  };
+const getScenarioIcon = (tipo) => {
+  switch (tipo) {
+    case 'giorno':
+      return 'u_brightness-low';
+    case 'notte':
+      return 'u_moon';
+    case 'lavoro':
+      return 'u_book';
+    default:
+      return 'u_home-alt';
+  }
+};
 
   return (
     <View style={styles.container}>
@@ -31,7 +31,7 @@ const ScenariCard = ({ scenari, onToggleScenario, onCreateNew }) => {
           >
             {/* Icona */}
             <View style={styles.iconContainer}>
-              <Ionicons
+              <Icon
                 name={getScenarioIcon(scenario.tipo)}
                 size={28}
                 color={COLORS.white}

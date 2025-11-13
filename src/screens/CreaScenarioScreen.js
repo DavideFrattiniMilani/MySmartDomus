@@ -8,7 +8,7 @@ import {
   StatusBar,
   TextInput,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from '../components/Icon';
 import { COLORS } from '../constants/colors';
 import { useScenari } from '../context/ScenariContext';
 import { getVillaData } from '../data';
@@ -26,17 +26,16 @@ const CreaScenarioScreen = ({ navigation, route }) => {
   const [selectedDevices, setSelectedDevices] = useState(route.params?.selectedDevices || []);
   const [soloInizio, setSoloInizio] = useState(route.params?.soloInizio || false);
 
-  const iconOptions = [
-    { nome: 'sunny', label: 'Sole' },
-    { nome: 'moon', label: 'Luna' },
-    { nome: 'briefcase', label: 'Lavoro' },
-    { nome: 'wine', label: 'Festa' },
-    { nome: 'barbell', label: 'Sport' },
-    { nome: 'gift', label: 'Compleanni' },
-    { nome: 'restaurant', label: 'Barbecue' },
-    { nome: 'fitness', label: 'Fitness' },
-  ];
-
+const iconOptions = [
+  { nome: 'u_brightness-low', label: 'Sole' },
+  { nome: 'u_moon', label: 'Luna' },
+  { nome: 'u_bag-alt', label: 'Lavoro' },
+  { nome: 'u_glass-martini', label: 'Festa' },
+  { nome: 'u_dumbbell', label: 'Sport' },
+  { nome: 'u_star', label: 'Compleanni' },
+  { nome: 'u_utensils', label: 'Barbecue' },
+  { nome: 'u_trophy', label: 'Fitness' },
+];
 React.useEffect(() => {
   if (!route.params) return;
 
@@ -124,7 +123,7 @@ const handleNavigateAmbiente = () => {
     });
   }}
 >
-  <Ionicons name="chevron-back" size={28} color={COLORS.white} />
+  <Icon name="u_angle-left" size={28} color={COLORS.white} />
 </TouchableOpacity>
 
 
@@ -160,11 +159,11 @@ const handleNavigateAmbiente = () => {
                 ]}
                 onPress={() => setSelectedIcon(icon.nome)}
               >
-                <Ionicons
-                  name={icon.nome}
-                  size={28}
-                  color={selectedIcon === icon.nome ? COLORS.white : COLORS.textSecondary}
-                />
+              <Icon
+                name={icon.nome}
+                size={28}
+                color={selectedIcon === icon.nome ? COLORS.white : COLORS.textSecondary}
+              />
               </TouchableOpacity>
             ))}
           </View>
@@ -180,7 +179,7 @@ const handleNavigateAmbiente = () => {
               <Text style={styles.sectionLabel}>Giorni</Text>
               <Text style={styles.sectionDescription}>Scegli i giorni della settimana</Text>
             </View>
-            <Ionicons name="chevron-forward" size={24} color={COLORS.primary} />
+            <Icon name="u_angle-right" size={20} color={COLORS.white} />
           </View>
         {selectedDays.length > 0 && (
         <View style={styles.selectedDaysBox}>
@@ -201,7 +200,7 @@ const handleNavigateAmbiente = () => {
               <Text style={styles.sectionLabel}>Ora</Text>
               <Text style={styles.sectionDescription}>Scegli l'ora di inizio e fine</Text>
             </View>
-            <Ionicons name="chevron-forward" size={24} color={COLORS.primary} />
+            <Icon name="u_angle-right" size={20} color={COLORS.white} />
           </View>
           <View style={styles.timeDisplay}>
             <Text style={styles.timeDisplayText}>
@@ -220,7 +219,7 @@ const handleNavigateAmbiente = () => {
               <Text style={styles.sectionLabel}>Ambiente e regolazione</Text>
               <Text style={styles.sectionDescription}>Scegli gli ambienti e gli oggetti da gestire</Text>
             </View>
-            <Ionicons name="chevron-forward" size={24} color={COLORS.primary} />
+            <Icon name="u_angle-right" size={20} color={COLORS.white} />
           </View>
         {selectedDevices.length > 0 && (
         <View style={styles.selectedDevicesContainer}>
@@ -306,19 +305,29 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 12,
   },
-  iconOption: {
-    width: '22%',
-    aspectRatio: 1,
-    backgroundColor: COLORS.cardBackground,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
+iconOption: {
+  width: 70, // ✅ Dimensione fissa
+  height: 70, // ✅ Dimensione fissa
+  backgroundColor: COLORS.cardBackground,
+  borderRadius: 12,
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+  borderWidth: 2,
+  borderColor: 'rgba(255, 255, 255, 0.1)',
+},
+
+iconsGrid: {
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  gap: 12,
+  justifyContent: 'space-between', // ✅ Distribuisce meglio
+},
+  
   iconOptionSelected: {
-    borderColor: COLORS.primary,
-    backgroundColor: 'rgba(255, 152, 0, 0.15)',
+  backgroundColor: COLORS.primary,
+  borderWidth: 2,
+  borderColor: COLORS.primary,
   },
   navigationSection: {
     marginBottom: 16,

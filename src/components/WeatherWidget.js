@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from './Icon';
 import { COLORS } from '../constants/colors';
 
 const WeatherWidget = ({ villa, temperatura, data, onPress }) => {
@@ -15,16 +15,16 @@ const WeatherWidget = ({ villa, temperatura, data, onPress }) => {
       {/* Info meteo */}
       <View style={styles.infoContainer}>
         <View style={styles.weatherRow}>
-          <Ionicons name="thermometer-outline" size={18} color={COLORS.primary} />
+          <Icon name="u_temperature-three-quarter" size={18} color={COLORS.primary} />
           <Text style={styles.temperatura}>{temperatura}</Text>
-          <Ionicons name="calendar-outline" size={16} color={COLORS.textSecondary} style={styles.calendarIcon} />
+          <Icon name="u_calender" size={16} color={COLORS.textSecondary} style={styles.calendarIcon} />
           <Text style={styles.data}>{data}</Text>
         </View>
         <Text style={styles.subtitle}>Cambia casa o modifica i parametri</Text>
       </View>
 
       {/* Icona freccia */}
-      <Ionicons name="chevron-forward" size={20} color={COLORS.textSecondary} />
+      <Icon name="u_angle-right" size={20} color={COLORS.textSecondary} />
     </TouchableOpacity>
   );
 };

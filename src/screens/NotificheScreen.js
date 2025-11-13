@@ -10,6 +10,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import NotificationCard from '../components/NotificationCard';
+import Icon from '../components/Icon';
 
 const NotificheScreen = ({ navigation }) => {
   const [selectedTab, setSelectedTab] = useState('tutte');
@@ -97,13 +98,13 @@ const NotificheScreen = ({ navigation }) => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBackPress} style={styles.iconButton}>
-          <Ionicons name="arrow-back" size={24} color={COLORS.white} />
+          <Icon name="u_arrow-left" size={24} color={COLORS.white} />
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>Notifiche</Text>
 
         <TouchableOpacity onPress={handleSettingsPress} style={styles.iconButton}>
-          <Ionicons name="settings-outline" size={24} color={COLORS.white} />
+          <Icon name="u_setting" size={24} color={COLORS.white} />
         </TouchableOpacity>
       </View>
 

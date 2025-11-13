@@ -8,7 +8,7 @@ import {
   StatusBar,
   Image,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from '../components/Icon';
 import { getVillaData, getVideocamere, getAntintrusione } from '../data';
 import { COLORS } from '../constants/colors';
 import WeatherWidget from '../components/WeatherWidget';
@@ -80,19 +80,18 @@ const VillaDetailScreen = ({ navigation, route }) => {
     navigation.navigate('CreaScenario', { villaId });
   };
 
-  const getScenarioIcon = (tipo) => {
-    const iconMap = {
-      giorno: 'sunny',
-      notte: 'moon',
-      lavoro: 'briefcase',
-      festa: 'wine',
-      sport: 'barbell',
-      compleanni: 'gift',
-      barbecue: 'restaurant',
-    };
-    return iconMap[tipo] || 'settings';
+const getScenarioIcon = (tipo) => {
+  const iconMap = {
+    giorno: 'u_brightness-low',
+    notte: 'u_moon',
+    lavoro: 'u_book',
+    festa: 'u_glass-martini',
+    sport: 'u_dumbbell',
+    compleanni: 'u_star',
+    barbecue: 'u_utensils',
   };
-
+  return iconMap[tipo] || 'u_setting';
+};
   // Prendi solo i primi 3 scenari per la preview
   const scenariPreview = scenari.slice(0, 3);
 
@@ -103,7 +102,7 @@ const VillaDetailScreen = ({ navigation, route }) => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleMenuPress} style={styles.iconButton}>
-          <Ionicons name="menu" size={28} color={COLORS.white} />
+          <Icon name="u_bars" size={28} color={COLORS.white} />
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>{villaData.nome}</Text>
@@ -113,7 +112,7 @@ const VillaDetailScreen = ({ navigation, route }) => {
             onPress={handleNotificationPress}
             style={styles.iconButton}
           >
-            <Ionicons name="notifications-outline" size={24} color={COLORS.white} />
+            <Icon name="u_bell" size={24} color={COLORS.white} />
             <View style={styles.notificationBadge}>
               <Text style={styles.notificationBadgeText}>3</Text>
             </View>
@@ -174,7 +173,7 @@ const VillaDetailScreen = ({ navigation, route }) => {
               onPress={() => handleToggleScenario(scenario.id)}
               activeOpacity={0.7}
             >
-              <Ionicons
+              <Icon
                 name={getScenarioIcon(scenario.tipo)}
                 size={24}
                 color={scenario.attivo ? COLORS.primary : COLORS.textSecondary}

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ScrollView
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from '../components/Icon';
 import { COLORS } from '../constants/colors';
 
 const ImpostazioniScreen = ({ navigation }) => {
@@ -48,7 +48,7 @@ const ImpostazioniScreen = ({ navigation }) => {
           onPress={() => navigation.goBack()} 
           style={styles.iconButton}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.white} />
+          <Icon name="u_arrow-left" size={24} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Impostazioni</Text>
         <View style={styles.placeholder} />
@@ -70,7 +70,7 @@ const ImpostazioniScreen = ({ navigation }) => {
               <Text style={styles.optionTitle}>{option.title}</Text>
               <Text style={styles.optionDescription}>{option.description}</Text>
             </View>
-            <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />
+            <Icon name="u_angle-right" size={20} color={COLORS.white} />
           </TouchableOpacity>
         ))}
       </ScrollView>

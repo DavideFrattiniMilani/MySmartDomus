@@ -1,28 +1,28 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from './Icon';
 import { COLORS } from '../constants/colors';
 
 const RoomCard = ({ room, onPress }) => {
   // Mappa icone per tipo dispositivo
-  const getDeviceIcon = (tipo) => {
-    const iconMap = {
-      luce: 'bulb',
-      termostato: 'thermometer',
-      sensore: 'radio-button-on',
-      presa: 'power',
-      condizionatore: 'snow',
-      tapparella: 'albums',
-      telecamera: 'videocam',
-      lucchetto: 'lock-closed',
-    };
-    return iconMap[tipo] || 'ellipse';
+const getDeviceIcon = (tipo) => {
+  const iconMap = {
+    luce: 'u_lightbulb',
+    termostato: 'u_temperature-three-quarter',
+    sensore: 'u_wifi',
+    presa: 'u_power',
+    condizionatore: 'u_temperature-three-quarter',
+    tapparella: 'u_blinds',
+    telecamera: 'u_webcam',
+    lucchetto: 'u_lock-alt',
   };
+  return iconMap[tipo] || 'u_power';
+};
 
   // Icona meteo per la stanza
   const getWeatherIcon = () => {
-    return 'sunny'; // Mock - in futuro dinamico
+    return 'u_temperature-three-quarter'; // Mock - in futuro dinamico
   };
 
   return (
@@ -42,10 +42,10 @@ const RoomCard = ({ room, onPress }) => {
         >
           {/* Badge nome stanza + temperatura */}
           <View style={styles.header}>
-            <View style={styles.nameBadge}>
-              <Ionicons name={getWeatherIcon()} size={16} color={COLORS.white} />
-              <Text style={styles.roomName}>{room.nome}</Text>
-            </View>
+          <View style={styles.nameBadge}>
+            <Icon name="u_temperature-three-quarter" size={16} color={COLORS.white} />
+            <Text style={styles.roomName}>{room.nome}</Text>
+          </View>
             <Text style={styles.temperatura}>{room.temperatura}</Text>
           </View>
 
@@ -53,11 +53,11 @@ const RoomCard = ({ room, onPress }) => {
           <View style={styles.devicesContainer}>
             {room.dispositivi.slice(0, 4).map((dispositivo, index) => (
               <View key={index} style={styles.deviceIcon}>
-                <Ionicons
-                  name={getDeviceIcon(dispositivo.tipo)}
-                  size={20}
-                  color={COLORS.white}
-                />
+              <Icon
+                name={getDeviceIcon(dispositivo.tipo)}
+                size={20}
+                color={COLORS.white}
+              />
               </View>
             ))}
             {room.dispositivi.length > 4 && (

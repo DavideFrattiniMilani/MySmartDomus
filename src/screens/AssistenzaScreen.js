@@ -8,7 +8,7 @@ import {
   ScrollView,
   Linking
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from '../components/Icon';
 import { COLORS } from '../constants/colors';
 import CustomButton from '../components/CustomButton';
 
@@ -37,7 +37,7 @@ const AssistenzaScreen = ({ navigation, route }) => {
           onPress={() => navigation.goBack()} 
           style={styles.iconButton}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.white} />
+          <Icon name="u_arrow-left" size={24} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Assistenza</Text>
         <View style={styles.placeholder} />
@@ -75,7 +75,7 @@ const AssistenzaScreen = ({ navigation, route }) => {
               Lorem ipsum dolor sit amet consectetur. Mattis neque a ut nec dolor.
             </Text>
           </View>
-          <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />
+          <Icon name="u_angle-right" size={20} color={COLORS.white} />
         </TouchableOpacity>
 
         {/* Opzione Messaggio */}
@@ -90,7 +90,7 @@ const AssistenzaScreen = ({ navigation, route }) => {
               Lorem ipsum dolor sit amet consectetur. Mattis neque a ut nec dolor.
             </Text>
           </View>
-          <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />
+          <Icon name="u_angle-right" size={20} color={COLORS.white} />
         </TouchableOpacity>
       </ScrollView>
     </View>

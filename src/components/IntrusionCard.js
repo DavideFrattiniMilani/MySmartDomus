@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from './Icon';
 import { COLORS } from '../constants/colors';
 
 const IntrusionCard = ({ title, porte, onSeeAll, onTogglePorta }) => {
@@ -25,8 +25,8 @@ const IntrusionCard = ({ title, porte, onSeeAll, onTogglePorta }) => {
           >
             {/* Icona lucchetto */}
             <View style={styles.iconContainer}>
-              <Ionicons
-                name={porta.attivo ? 'lock-closed' : 'lock-open'}
+              <Icon
+                name={porta.attivo ? 'u_lock-alt' : 'u_lock-open-alt'}
                 size={18}
                 color={COLORS.white}
               />
@@ -54,11 +54,7 @@ const IntrusionCard = ({ title, porte, onSeeAll, onTogglePorta }) => {
             </View>
 
             {/* Chevron */}
-            <Ionicons
-              name="chevron-forward"
-              size={18}
-              color={COLORS.textSecondary}
-            />
+<Icon name="u_angle-right" size={20} color={COLORS.white} />
           </TouchableOpacity>
         ))}
       </View>

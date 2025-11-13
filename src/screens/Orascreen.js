@@ -9,6 +9,7 @@ import {
   TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Icon from '../components/Icon';
 import { COLORS } from '../constants/colors';
 
 const OraScreen = ({ navigation, route }) => {
@@ -54,7 +55,7 @@ const handleSave = () => {
         >
           <Text style={styles.timeLabel}>{label}</Text>
           <Text style={styles.timeValue}>{value}</Text>
-          <Ionicons name="chevron-down" size={20} color={disabled ? COLORS.textSecondary : COLORS.primary} />
+          <Icon name="u_angle-down1" size={20} color={disabled ? COLORS.textSecondary : COLORS.primary} />
         </TouchableOpacity>
 
         {showPicker && (
@@ -97,7 +98,7 @@ const handleSave = () => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={28} color={COLORS.white} />
+          <Icon name="u_angle-left" size={28} color={COLORS.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Ora</Text>
         <View style={{ width: 28 }} />
@@ -140,7 +141,6 @@ const handleSave = () => {
 
         {/* Info */}
         <View style={styles.infoBox}>
-          <Ionicons name="information-circle" size={20} color={COLORS.primary} />
           <Text style={styles.infoText}>
             {soloInizio
               ? 'Lo scenario si attiva solo all\'ora impostata'

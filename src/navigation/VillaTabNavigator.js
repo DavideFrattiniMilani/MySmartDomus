@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from '../components/Icon';
 import { COLORS } from '../constants/colors';
 
 // Import schermate
@@ -40,7 +40,7 @@ const VillaTabNavigator = ({ route }) => {
         initialParams={{ villa }}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+            <Icon  name="u_home-alt" size={size} color={color} />
           ),
           tabBarLabel: 'HOME',
         }}
@@ -61,7 +61,7 @@ const VillaTabNavigator = ({ route }) => {
         initialParams={{ villa }}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="stats-chart" size={size} color={color} />
+            <Icon name="u_chart" size={size} color={color} />
           ),
           tabBarLabel: 'DASHBOARD',
         }}
@@ -73,7 +73,7 @@ const VillaTabNavigator = ({ route }) => {
         initialParams={{ villa, villaId: villa.id }}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="grid" size={size} color={color} />
+            <Icon name="u_apps" size={size} color={color} />
           ),
           tabBarLabel: 'AMBIENTI',
         }}
@@ -85,7 +85,7 @@ const VillaTabNavigator = ({ route }) => {
         initialParams={{ villa }}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="help-circle" size={size} color={color} />
+            <Icon name="u_question-circle" size={size} color={color} />
           ),
           tabBarLabel: 'ASSISTENZA',
         }}
