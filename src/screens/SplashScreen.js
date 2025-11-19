@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, StatusBar, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import CustomButton from '../components/CustomButton';
 
@@ -26,30 +25,30 @@ const SplashScreen = ({ navigation }) => {
           style={styles.gradient}
         >
           <View style={styles.content}>
-            {/* Logo centrale grande */}
-            <View style={styles.logoContainer}>
-              <View style={styles.logoIconContainer}>
-                <Ionicons name="home" size={80} color={COLORS.primary} />
-                <Ionicons 
-                  name="wifi" 
-                  size={40} 
-                  color={COLORS.primary} 
-                  style={styles.wifiIcon}
-                />
+            {/* Logo in alto a sinistra */}
+            <View style={styles.logoSection}>
+              <Image 
+                source={require('../../assets/logo-box-color.png')} 
+                style={styles.logoImage}
+                resizeMode="contain"
+              />
               </View>
+
+            {/* Testi e bottone in basso */}
+            <View style={styles.bottomSection}>
               <Text style={styles.logoText}>MySmart Domus</Text>
               <Text style={styles.tagline}>La tua casa in un'app</Text>
               <Text style={styles.subtitle}>
                 Gestisci la tua casa in qualsiasi momento, ovunque.
               </Text>
-            </View>
-
-            {/* Bottone in basso */}
-            <View style={styles.buttonContainer}>
-              <CustomButton 
-                title="Inizia" 
-                onPress={handleStart}
-              />
+              
+              {/* Bottone */}
+              <View style={styles.buttonContainer}>
+                <CustomButton 
+                  title="Inizia" 
+                  onPress={handleStart}
+                />
+              </View>
             </View>
           </View>
         </LinearGradient>
@@ -74,51 +73,42 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 100,
+    paddingTop: 60,
     paddingBottom: 50,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: 'space-between', // ✅ Spazio tra logo (alto) e testi (basso)
   },
-  logoContainer: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
+  logoSection: {
+    // ✅ Logo in alto a sinistra
+    alignItems: 'flex-start',
   },
-  logoIconContainer: {
-    position: 'relative',
-    width: 120,
-    height: 120,
-    marginBottom: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255, 159, 90, 0.1)',
-    borderRadius: 60,
-  },
-  wifiIcon: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
+  logoImage: {
+    width: 150,
+    height: 150,
+    marginBottom: 30,
   },
   logoText: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '600',
     color: COLORS.primary,
-    letterSpacing: 0.5,
-    marginBottom: 16,
+    letterSpacing: 0,
+  },
+  bottomSection: {
+    // ✅ Testi e bottone in basso
+    width: '100%',
   },
   tagline: {
-    fontSize: 28,
-    fontWeight: '600',
+    fontSize: 32,
+    fontWeight: 'bold',
     color: COLORS.white,
-    marginBottom: 12,
-    textAlign: 'center',
+    marginBottom: 16,
+    textAlign: 'left',
   },
   subtitle: {
     fontSize: 16,
     color: COLORS.textSecondary,
     lineHeight: 24,
-    textAlign: 'center',
-    maxWidth: '85%',
+    textAlign: 'left',
+    marginBottom: 32, // ✅ Spazio prima del bottone
   },
   buttonContainer: {
     width: '100%',

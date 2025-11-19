@@ -1,4 +1,3 @@
-
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import {
@@ -10,6 +9,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Image,
 } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
@@ -20,22 +20,16 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Funzione di login MOCK (senza backend per ora)
   const handleLogin = () => {
-    // Validazione base
     if (!email || !password) {
       alert('Inserisci email e password');
       return;
     }
-
-    // Simula chiamata API con loading
     setLoading(true);
-    
     setTimeout(() => {
       setLoading(false);
-      // Vai alla schermata Home (lista case)
       navigation.navigate('HomeCase');
-    }, 1500); // Simula 1.5 secondi di attesa
+    }, 1500);
   };
 
   const handleForgotPassword = () => {
@@ -57,18 +51,16 @@ const LoginScreen = ({ navigation }) => {
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Logo in alto */}
+        {/* Logo in alto - piccolo */}
         <View style={styles.logoContainer}>
-          <View style={styles.logoIconContainer}>
-            <Ionicons name="home" size={32} color={COLORS.primary} />
-            <Ionicons
-              name="wifi"
-              size={16}
-              color={COLORS.primary}
-              style={styles.wifiIcon}
+          <View style={styles.logoRow}>
+            <Image 
+              source={require('../../assets/logo-box-color.png')} 
+              style={styles.logoImage}
+              resizeMode="contain"
             />
+            <Text style={styles.logoText}>MySmart Domus</Text>
           </View>
-          <Text style={styles.logoText}>MySmart Domus</Text>
         </View>
 
         {/* Titolo e sottotitolo */}
@@ -150,27 +142,22 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   logoContainer: {
-    alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 60, // ✅ Più spazio sotto il logo
   },
-  logoIconContainer: {
-    position: 'relative',
-    width: 50,
+  logoRow: {
+    flexDirection: 'row', // ✅ Logo e testo in riga
+    alignItems: 'center',
+    gap: 12,
+  },
+  logoImage: {
+    width: 50,  // ✅ Logo piccolo
     height: 50,
-    marginBottom: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  wifiIcon: {
-    position: 'absolute',
-    top: -4,
-    right: -4,
   },
   logoText: {
     fontSize: 18,
     fontWeight: '600',
     color: COLORS.primary,
-    letterSpacing: 0.5,
+    letterSpacing: 0,
   },
   headerContainer: {
     marginBottom: 32,
