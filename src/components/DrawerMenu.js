@@ -11,13 +11,16 @@ import {
   Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const DRAWER_WIDTH = 280;
 
 const DrawerMenu = ({ navigation, visible, onClose }) => {
   const slideAnim = React.useRef(new Animated.Value(-DRAWER_WIDTH)).current;
+  const { isDark } = useTheme();     
+  const COLORS = getColors(isDark);     
 
   React.useEffect(() => {
     if (visible) {
@@ -108,6 +111,7 @@ const DrawerMenu = ({ navigation, visible, onClose }) => {
           style={[
             styles.drawerContainer,
             {
+              backgroundColor: COLORS.cardBackground,
               transform: [{ translateX: slideAnim }],
             },
           ]}
@@ -125,8 +129,8 @@ const DrawerMenu = ({ navigation, visible, onClose }) => {
                     onPress={() => handleMenuItemPress(item.action)}
                     activeOpacity={0.7}
                   >
-                    <Ionicons name={item.icon} size={24} color={COLORS.white} />
-                    <Text style={styles.menuText}>{item.title}</Text>
+                    <Ionicons name={item.icon} size={24} color={COLORS.textPrimary} />
+                    <Text style={[styles.menuText, { color: COLORS.textPrimary }]}>{item.title}</Text>
                   </TouchableOpacity>
                 ))}
               </ScrollView>
@@ -153,7 +157,6 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: DRAWER_WIDTH,
-    backgroundColor: COLORS.cardBackground,
     shadowColor: '#000',
     shadowOffset: {
       width: 2,
@@ -181,7 +184,6 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 16,
-    color: COLORS.white,
     fontWeight: '500',
   },
 });

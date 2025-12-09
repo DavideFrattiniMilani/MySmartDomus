@@ -8,7 +8,8 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import DispositivoPanel from '../components/DispositivoPanel';
 import Icon from '../components/Icon';
 
@@ -16,10 +17,12 @@ const { width, height } = Dimensions.get('window');
 
 const StanzaScreen = ({ navigation, route }) => {
   const { room } = route.params;
-  // Converti dispositivi da nuovo formato a vecchio (se necessario)
   const dispositivi = room.dispositivi?.luci || room.dispositivi || [];
   const [selectedDevice, setSelectedDevice] = useState(null);
   const [panelVisible, setPanelVisible] = useState(false);
+  
+  const { isDark } = useTheme();    
+  const COLORS = getColors(isDark);    
 
 
   // Posiziona dispositivi sulla foto (distribuiti automaticamente)
@@ -57,7 +60,7 @@ const getDeviceIcon = (tipo) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
       <StatusBar barStyle="light-content" />
 
       {/* Foto stanza fullscreen */}
@@ -71,16 +74,16 @@ const getDeviceIcon = (tipo) => {
           {/* Header */}
           <View style={styles.header}>
             <TouchableOpacity onPress={handleBackPress} style={styles.iconButton}>
-              <View style={styles.iconButtonBg}>
-                <Icon name="u_arrow-left" size={24} color={COLORS.white} />
-              </View>
+            <View style={styles.iconButtonBg}>
+              <Icon name="u_arrow-left" size={24} color="#FFFFFF" />
+            </View>
             </TouchableOpacity>
 
             <Text style={styles.headerTitle}>{room.nome}</Text>
 
             <TouchableOpacity onPress={handleSettingsPress} style={styles.iconButton}>
               <View style={styles.iconButtonBg}>
-                <Icon name="u_setting" size={24} color={COLORS.white} />
+                <Icon name="u_setting" size={24} color="#FFFFFF" />
               </View>
             </TouchableOpacity>
           </View>
@@ -105,7 +108,7 @@ const getDeviceIcon = (tipo) => {
                   <Icon
                     name={getDeviceIcon(device.tipo)}
                     size={24}
-                    color={COLORS.white}
+                    color="#FFFFFF"
                   />
                 </View>
                 {/* Pulse animation per device attivo */}
@@ -129,7 +132,6 @@ const getDeviceIcon = (tipo) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   backgroundImage: {
     width: width,
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
+    color: '#FFFFFF',
     textShadowColor: 'rgba(0, 0, 0, 0.8)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
@@ -176,7 +178,6 @@ const styles = StyleSheet.create({
     height: 56,
     alignItems: 'center',
     justifyContent: 'center',
-    // Centra l'icona rispetto alla posizione
     marginLeft: -28,
     marginTop: -28,
   },
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#FFA74F',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -200,7 +201,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#FFA74F',
     opacity: 0.3,
   },
 });

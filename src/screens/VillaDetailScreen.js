@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import Icon from '../components/Icon';
 import { getVillaData, getVideocamere, getAntintrusione } from '../data';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import WeatherWidget from '../components/WeatherWidget';
 import VideoCard from '../components/VideoCard';
 import SectionHeader from '../components/SectionHeader';
@@ -21,7 +22,8 @@ import { useUser } from '../context/UserContext';
 
 const VillaDetailScreen = ({ navigation, route }) => {
   const { openDrawer } = useDrawer();
-  
+  const { isDark } = useTheme();        
+  const COLORS = getColors(isDark);
   // Dati villa
   const villaParam = route?.params?.villa;
   const villaId = villaParam?.id || 1;
@@ -98,24 +100,24 @@ const getScenarioIcon = (tipo) => {
   const scenariPreview = scenari.slice(0, 3);
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
         <TouchableOpacity onPress={handleMenuPress} style={styles.iconButton}>
-          <Icon name="u_bars" size={28} color={COLORS.white} />
+          <Icon name="u_bars" size={28} color={COLORS.textPrimary} />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>{villaData.nome}</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>{villaData.nome}</Text>
 
         <View style={styles.headerRight}>
           <TouchableOpacity
             onPress={handleNotificationPress}
             style={styles.iconButton}
           >
-            <Icon name="u_bell" size={24} color={COLORS.white} />
-            <View style={styles.notificationBadge}>
+            <Icon name="u_bell" size={24} color={COLORS.textPrimary} />
+            <View style={[styles.notificationBadge, { borderColor: COLORS.background }]}>
               <Text style={styles.notificationBadgeText}>3</Text>
             </View>
           </TouchableOpacity>
@@ -170,6 +172,10 @@ const getScenarioIcon = (tipo) => {
               key={scenario.id}
               style={[
                 styles.scenarioCard,
+                {
+                  backgroundColor: COLORS.cardBackground,
+                  borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                },
                 scenario.attivo && styles.scenarioCardActive,
               ]}
               onPress={() => handleToggleScenario(scenario.id)}
@@ -180,18 +186,18 @@ const getScenarioIcon = (tipo) => {
                 size={24}
                 color={scenario.attivo ? COLORS.primary : COLORS.textSecondary}
               />
-              <Text style={styles.scenarioCardText}>{scenario.nome}</Text>
+              <Text style={[styles.scenarioCardText, { color: COLORS.textPrimary }]}>{scenario.nome}</Text>
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Bottone Crea Scenario */}
         <TouchableOpacity
-          style={styles.createScenarioButton}
+          style={[styles.createScenarioButton, { borderColor: COLORS.primary }]}
           onPress={handleCreateScenario}
           activeOpacity={0.8}
         >
-          <Text style={styles.createScenarioButtonText}>Crea nuovo scenario</Text>
+          <Text style={[styles.createScenarioButtonText, { color: COLORS.primary }]}>Crea nuovo scenario</Text>
         </TouchableOpacity>
 
         {/* Spazio in basso */}
@@ -204,7 +210,6 @@ const getScenarioIcon = (tipo) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -213,7 +218,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: COLORS.background,
   },
   iconButton: {
     padding: 4,
@@ -222,7 +226,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
     flex: 1,
     textAlign: 'center',
   },
@@ -242,10 +245,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: COLORS.background,
   },
   notificationBadgeText: {
-    color: COLORS.white,
+    color: '#FFFFFF',
     fontSize: 10,
     fontWeight: 'bold',
   },
@@ -255,7 +257,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: COLORS.primary,
+    borderColor: '#FFA74F',
   },
   avatarImage: {
     width: '100%',
@@ -272,28 +274,24 @@ const styles = StyleSheet.create({
   },
   scenarioCard: {
     flex: 1,
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   scenarioCardActive: {
-    borderColor: COLORS.primary,
+    borderColor: '#FFA74F',
     backgroundColor: 'rgba(255, 152, 0, 0.1)',
   },
   scenarioCardText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.white,
     textAlign: 'center',
   },
   createScenarioButton: {
     borderWidth: 2,
-    borderColor: COLORS.primary,
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: 'center',
@@ -303,7 +301,6 @@ const styles = StyleSheet.create({
   createScenarioButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.primary,
   },
   bottomSpacer: {
     height: 100,

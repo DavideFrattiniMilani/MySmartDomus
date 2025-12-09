@@ -8,12 +8,16 @@ import {
   StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import NotificationCard from '../components/NotificationCard';
 import Icon from '../components/Icon';
 
 const NotificheScreen = ({ navigation }) => {
   const [selectedTab, setSelectedTab] = useState('tutte');
+  
+  const { isDark } = useTheme();        
+  const COLORS = getColors(isDark);     
 
   // DATI MOCK - Notifiche simulate
   const [notifiche] = useState([
@@ -91,25 +95,27 @@ const NotificheScreen = ({ navigation }) => {
     alert('Impostazioni notifiche - Da implementare');
   };
 
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+return (
+  <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+    <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
         <TouchableOpacity onPress={handleBackPress} style={styles.iconButton}>
-          <Icon name="u_arrow-left" size={24} color={COLORS.white} />
+          <Icon name="u_arrow-left" size={24} color={COLORS.textPrimary} />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Notifiche</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Notifiche</Text>
 
         <TouchableOpacity onPress={handleSettingsPress} style={styles.iconButton}>
-          <Icon name="u_setting" size={24} color={COLORS.white} />
+          <Icon name="u_setting" size={24} color={COLORS.textPrimary} />
         </TouchableOpacity>
       </View>
 
       {/* Tabs */}
-      <View style={styles.tabsContainer}>
+      <View style={[styles.tabsContainer, { 
+          borderBottomColor: COLORS.inputBorder 
+        }]}>
         <TouchableOpacity
           style={[styles.tab, selectedTab === 'tutte' && styles.tabActive]}
           onPress={() => setSelectedTab('tutte')}
@@ -117,12 +123,13 @@ const NotificheScreen = ({ navigation }) => {
           <Text
             style={[
               styles.tabText,
-              selectedTab === 'tutte' && styles.tabTextActive,
+              { color: COLORS.textSecondary },
+              selectedTab === 'tutte' && { color: COLORS.primary },
             ]}
           >
             TUTTE
           </Text>
-          {selectedTab === 'tutte' && <View style={styles.tabIndicator} />}
+          {selectedTab === 'tutte' && <View style={[styles.tabIndicator, { backgroundColor: COLORS.primary }]} />}
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -132,12 +139,13 @@ const NotificheScreen = ({ navigation }) => {
           <Text
             style={[
               styles.tabText,
-              selectedTab === 'avvisi' && styles.tabTextActive,
+              { color: COLORS.textSecondary },
+              selectedTab === 'tutte' && { color: COLORS.primary },
             ]}
           >
-            AVVISI
+            TUTTE
           </Text>
-          {selectedTab === 'avvisi' && <View style={styles.tabIndicator} />}
+          {selectedTab === 'avvisi' && <View style={[styles.tabIndicator, { backgroundColor: COLORS.primary }]} />}
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -145,21 +153,22 @@ const NotificheScreen = ({ navigation }) => {
           onPress={() => setSelectedTab('allarmi')}
         >
           <View style={styles.tabWithBadge}>
-            <Text
-              style={[
-                styles.tabText,
-                selectedTab === 'allarmi' && styles.tabTextActive,
-              ]}
-            >
-              ALLARMI
-            </Text>
+          <Text
+            style={[
+              styles.tabText,
+              { color: COLORS.textSecondary },
+              selectedTab === 'tutte' && { color: COLORS.primary },
+            ]}
+          >
+            ALLARMI
+          </Text>
             {allarmiCount > 0 && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>{allarmiCount}</Text>
-              </View>
+            <View style={[styles.badge, { backgroundColor: COLORS.primary }]}>
+              <Text style={[styles.badgeText, { color: COLORS.textPrimary }]}>{allarmiCount}</Text>
+            </View>
             )}
           </View>
-          {selectedTab === 'allarmi' && <View style={styles.tabIndicator} />}
+          {selectedTab === 'allarmi' && <View style={[styles.tabIndicator, { backgroundColor: COLORS.primary }]} />}
         </TouchableOpacity>
       </View>
 
@@ -176,14 +185,14 @@ const NotificheScreen = ({ navigation }) => {
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Ionicons
-              name="notifications-off-outline"
-              size={64}
-              color={COLORS.textSecondary}
-            />
-            <Text style={styles.emptyText}>Nessuna notifica</Text>
-          </View>
+        <View style={styles.emptyContainer}>
+          <Ionicons
+            name="notifications-off-outline"
+            size={64}
+            color={COLORS.textSecondary}
+          />
+          <Text style={[styles.emptyText, { color: COLORS.textSecondary }]}>Nessuna notifica</Text>
+        </View>
         }
       />
     </View>
@@ -193,7 +202,6 @@ const NotificheScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -209,13 +217,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
   },
   tabsContainer: {
     flexDirection: 'row',
     paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.inputBorder,
     marginBottom: 16,
   },
   tab: {
@@ -230,18 +236,13 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 13,
     fontWeight: '600',
-    color: COLORS.textSecondary,
     letterSpacing: 0.5,
-  },
-  tabTextActive: {
-    color: COLORS.primary,
   },
   tabIndicator: {
     position: 'absolute',
     bottom: -1,
     height: 2,
     width: '60%',
-    backgroundColor: COLORS.primary,
   },
   tabWithBadge: {
     flexDirection: 'row',
@@ -249,7 +250,6 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   badge: {
-    backgroundColor: COLORS.primary,
     minWidth: 20,
     height: 20,
     borderRadius: 10,
@@ -258,7 +258,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   badgeText: {
-    color: COLORS.white,
     fontSize: 11,
     fontWeight: 'bold',
   },
@@ -273,7 +272,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: COLORS.textSecondary,
     marginTop: 16,
   },
 });

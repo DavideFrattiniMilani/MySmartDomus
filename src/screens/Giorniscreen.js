@@ -8,12 +8,15 @@ import {
   StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import Icon from '../components/Icon';
 
 const GiorniScreen = ({ navigation, route }) => {
   const { selectedDays: initialDays } = route.params || {};
   const [selectedDays, setSelectedDays] = useState(initialDays || []);
+  const { isDark } = useTheme();
+  const COLORS = getColors(isDark);
 
   const giorni = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
 
@@ -39,70 +42,84 @@ const handleSave = () => {
 };
 
 
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+return (
+  <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+    <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="u_angle-left" size={28} color={COLORS.white} />
+          <Icon name="u_angle-left" size={28} color={COLORS.textPrimary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Giorni</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Giorni</Text>
         <View style={{ width: 28 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Select All */}
         <TouchableOpacity
-          style={styles.selectAllButton}
+          style={[styles.selectAllButton, {
+            backgroundColor: COLORS.cardBackground,
+            borderColor: COLORS.primary
+          }]}
           onPress={handleSelectAll}
+        >
+        <View
+          style={[
+            styles.checkbox,
+            { borderColor: COLORS.textSecondary },
+            selectedDays.length === giorni.length && styles.checkboxSelected,
+          ]}
+        >
+          {selectedDays.length === giorni.length && (
+            <Ionicons name="checkmark" size={16} color={COLORS.textPrimary} />
+          )}
+        </View>
+        <Text style={[styles.selectAllText, { color: COLORS.textPrimary }]}>Tutti i giorni</Text>
+        </TouchableOpacity>
+
+        {/* Divider */}
+        <View style={[styles.divider, { 
+          backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' 
+        }]} />
+
+        {/* Days List */}
+        {giorni.map(day => (
+        <TouchableOpacity
+          key={day}
+          style={[
+            styles.dayItem,
+            {
+              backgroundColor: COLORS.cardBackground,
+              borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+            },
+            selectedDays.includes(day) && styles.dayItemSelected,
+          ]}
+          onPress={() => toggleDay(day)}
         >
           <View
             style={[
               styles.checkbox,
-              selectedDays.length === giorni.length && styles.checkboxSelected,
+              { borderColor: COLORS.textSecondary },
+              selectedDays.includes(day) && styles.checkboxSelected,
             ]}
           >
-            {selectedDays.length === giorni.length && (
-              <Ionicons name="checkmark" size={16} color={COLORS.white} />
+            {selectedDays.includes(day) && (
+              <Ionicons name="checkmark" size={16} color={COLORS.textPrimary} />
             )}
           </View>
-          <Text style={styles.selectAllText}>Tutti i giorni</Text>
+          <Text style={[styles.dayLabel, { color: COLORS.textPrimary }]}>{day}</Text>
         </TouchableOpacity>
-
-        {/* Divider */}
-        <View style={styles.divider} />
-
-        {/* Days List */}
-        {giorni.map(day => (
-          <TouchableOpacity
-            key={day}
-            style={[
-              styles.dayItem,
-              selectedDays.includes(day) && styles.dayItemSelected,
-            ]}
-            onPress={() => toggleDay(day)}
-          >
-            <View
-              style={[
-                styles.checkbox,
-                selectedDays.includes(day) && styles.checkboxSelected,
-              ]}
-            >
-              {selectedDays.includes(day) && (
-                <Ionicons name="checkmark" size={16} color={COLORS.white} />
-              )}
-            </View>
-            <Text style={styles.dayLabel}>{day}</Text>
-          </TouchableOpacity>
         ))}
 
         <View style={styles.bottomSpacer} />
       </ScrollView>
 
       {/* Footer Button */}
-      <View style={styles.footer}>
+      <View style={[styles.footer, {
+        backgroundColor: COLORS.background,
+        borderTopColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+      }]}>
         <TouchableOpacity
           style={styles.saveButton}
           onPress={handleSave}
@@ -118,7 +135,6 @@ const handleSave = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -127,12 +143,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: COLORS.background,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
     flex: 1,
     textAlign: 'center',
   },
@@ -145,15 +159,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 12,
     marginBottom: 12,
     borderWidth: 2,
-    borderColor: COLORS.primary,
   },
   divider: {
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     marginBottom: 12,
   },
   dayItem: {
@@ -161,14 +172,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 12,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   dayItemSelected: {
-    borderColor: COLORS.primary,
+    borderColor: '#FFA74F',
     backgroundColor: 'rgba(255, 152, 0, 0.1)',
   },
   checkbox: {
@@ -176,37 +185,32 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: COLORS.textSecondary,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
   },
   checkboxSelected: {
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
+    backgroundColor: '#FFA74F',
+    borderColor: '#FFA74F',
   },
   dayLabel: {
     fontSize: 16,
-    color: COLORS.white,
     fontWeight: '500',
   },
   selectAllText: {
     fontSize: 16,
-    color: COLORS.white,
     fontWeight: '600',
   },
   bottomSpacer: {
     height: 100,
   },
   footer: {
-    backgroundColor: COLORS.background,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.1)',
   },
   saveButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#FFA74F',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
@@ -215,7 +219,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.background,
+    color: '#000000',
   },
 });
 

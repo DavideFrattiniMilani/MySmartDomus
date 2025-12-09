@@ -8,13 +8,17 @@ import {
   StatusBar,
 } from 'react-native';
 import Icon from '../components/Icon';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import { useScenari } from '../context/ScenariContext';
 
 const ScenariListScreen = ({ navigation, route }) => {
   const { villaId } = route.params;
   const { getScenari, toggleScenario } = useScenari();
   const scenari = getScenari(villaId);
+  
+  const { isDark } = useTheme();      
+  const COLORS = getColors(isDark);     
 
 const getScenarioIcon = (tipo) => {
   const iconMap = {
@@ -42,11 +46,14 @@ const getScenarioIcon = (tipo) => {
   };
 
   const renderScenarioItem = (scenario) => (
-    <TouchableOpacity
-      key={scenario.id}
-      style={styles.scenarioItem}
-      activeOpacity={0.7}
-    >
+      <TouchableOpacity
+        key={scenario.id}
+        style={[styles.scenarioItem, {
+          backgroundColor: COLORS.cardBackground,
+          borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+        }]}
+        activeOpacity={0.7}
+      >
       <View style={styles.scenarioContent}>
         <View style={styles.scenarioIcon}>
         <Icon
@@ -56,10 +63,10 @@ const getScenarioIcon = (tipo) => {
         />
         </View>
         <View style={styles.scenarioInfo}>
-          <Text style={styles.scenarioName}>{scenario.nome}</Text>
-          <Text style={styles.scenarioTime}>
-            Tutti i giorni | {scenario.oraInizio} - {scenario.oraFine}
-          </Text>
+        <Text style={[styles.scenarioName, { color: COLORS.textPrimary }]}>{scenario.nome}</Text>
+        <Text style={[styles.scenarioTime, { color: COLORS.textSecondary }]}>
+          Tutti i giorni | {scenario.oraInizio} - {scenario.oraFine}
+        </Text>
         </View>
       </View>
       <TouchableOpacity
@@ -70,12 +77,14 @@ const getScenarioIcon = (tipo) => {
         <View
           style={[
             styles.toggle,
+            { backgroundColor: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)' },
             scenario.attivo && styles.toggleActive,
           ]}
         >
           <View
             style={[
               styles.toggleThumb,
+              { backgroundColor: COLORS.textPrimary },
               scenario.attivo && styles.toggleThumbActive,
             ]}
           />
@@ -85,31 +94,31 @@ const getScenarioIcon = (tipo) => {
   );
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Icon name="u_angle-left" size={28} color={COLORS.white} />
+        <Icon name="u_angle-left" size={28} color={COLORS.textPrimary} />
       </TouchableOpacity>
-        <Text style={styles.headerTitle}>Scenari</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Scenari</Text>
       <TouchableOpacity onPress={handleCreaScenario}>
-        <Icon name="u_plus" size={28} color={COLORS.white} />
+        <Icon name="u_plus" size={28} color={COLORS.textPrimary} />
       </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Scenari Preimpostati */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Scenari preimpostati</Text>
+          <Text style={[styles.sectionTitle, { color: COLORS.textPrimary }]}>Scenari preimpostati</Text>
           {scenariPreimpostati.map(scenario => renderScenarioItem(scenario))}
         </View>
 
         {/* Scenari Creati */}
         {scenariCreati.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Scenari creati</Text>
+            <Text style={[styles.sectionTitle, { color: COLORS.textPrimary }]}>Scenari creati</Text>
             {scenariCreati.map(scenario => renderScenarioItem(scenario))}
           </View>
         )}
@@ -124,7 +133,6 @@ const getScenarioIcon = (tipo) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -133,12 +141,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: COLORS.background,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
     flex: 1,
     textAlign: 'center',
   },
@@ -152,20 +158,17 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.white,
     marginBottom: 12,
   },
   scenarioItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   scenarioContent: {
     flexDirection: 'row',
@@ -187,12 +190,10 @@ const styles = StyleSheet.create({
   scenarioName: {
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.white,
     marginBottom: 4,
   },
   scenarioTime: {
     fontSize: 12,
-    color: COLORS.textSecondary,
   },
   toggleButton: {
     padding: 8,
@@ -201,18 +202,16 @@ const styles = StyleSheet.create({
     width: 50,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     paddingHorizontal: 2,
   },
   toggleActive: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#FFA74F',
   },
   toggleThumb: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: COLORS.white,
     alignSelf: 'flex-start',
   },
   toggleThumbActive: {

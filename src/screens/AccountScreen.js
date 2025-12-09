@@ -9,14 +9,15 @@ import {
   Image,
   ScrollView,
   Alert,
+  Switch,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
 import { useUser } from '../context/UserContext';
+import { useTheme } from '../context/ThemeContext'; // NUOVO
 
 const AccountScreen = ({ navigation }) => {
-  // Usa il context invece di useState locale
   const { 
     profileImage, 
     email, 
@@ -26,12 +27,13 @@ const AccountScreen = ({ navigation }) => {
     DEFAULT_AVATAR
   } = useUser();
 
-  // Determina se sta usando l'avatar di default
+  // NUOVO: Hook per il tema
+  const { isDark, toggleTheme } = useTheme();
+  const COLORS = getColors(isDark);
+
   const isDefaultAvatar = profileImage === DEFAULT_AVATAR;
 
-  // Funzione per scegliere foto dalla galleria
   const pickImage = async () => {
-    // Richiedi permessi per la galleria
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     
     if (status !== 'granted') {
@@ -42,7 +44,6 @@ const AccountScreen = ({ navigation }) => {
       return;
     }
 
-    // Apri la galleria
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -59,7 +60,6 @@ const AccountScreen = ({ navigation }) => {
     }
   };
 
-  // Funzione per rimuovere foto e usare avatar default
   const removeProfileImage = () => {
     Alert.alert(
       'Usa avatar predefinito',
@@ -80,7 +80,6 @@ const AccountScreen = ({ navigation }) => {
     );
   };
 
-  // Funzione per richiedere cambio password
   const requestPasswordChange = () => {
     Alert.alert(
       'Richiesta cambio password',
@@ -90,7 +89,6 @@ const AccountScreen = ({ navigation }) => {
         {
           text: 'Invia richiesta',
           onPress: () => {
-            // TODO: Implementare invio email all'admin
             Alert.alert(
               'Richiesta inviata',
               'La tua richiesta di cambio password è stata presa in carico. Riceverai una email con le istruzioni.',
@@ -102,7 +100,6 @@ const AccountScreen = ({ navigation }) => {
     );
   };
 
-  // Funzione per logout
   const handleLogout = () => {
     Alert.alert(
       'Logout',
@@ -128,17 +125,26 @@ const AccountScreen = ({ navigation }) => {
     );
   };
 
+  // NUOVO: Handler per cambio tema
+  const handleThemeToggle = async () => {
+    try {
+      await toggleTheme();
+    } catch (error) {
+      Alert.alert('Errore', 'Impossibile cambiare tema');
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      {/* Header con bottone indietro */}
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.white} />
+          <Ionicons name="arrow-back" size={24} color={COLORS.textPrimary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Account</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Account</Text>
         <View style={styles.headerRight} />
       </View>
 
@@ -147,14 +153,13 @@ const AccountScreen = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         {/* Sezione Foto Profilo */}
-        <View style={styles.profileSection}>
+        <View style={[styles.profileSection, { borderBottomColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' }]}>
           <View style={styles.avatarContainer}>
             <Image 
               source={{ uri: profileImage }} 
               style={styles.avatar} 
             />
             
-            {/* Bottone per modificare foto */}
             <TouchableOpacity
               style={styles.editAvatarButton}
               onPress={pickImage}
@@ -163,23 +168,22 @@ const AccountScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {/* Bottoni gestione foto */}
           <View style={styles.avatarActions}>
             <TouchableOpacity
-              style={styles.avatarActionButton}
+              style={[styles.avatarActionButton, { backgroundColor: COLORS.cardBackground }]}
               onPress={pickImage}
             >
               <Ionicons name="images-outline" size={20} color={COLORS.primary} />
-              <Text style={styles.avatarActionText}>Cambia foto</Text>
+              <Text style={[styles.avatarActionText, { color: COLORS.primary }]}>Cambia foto</Text>
             </TouchableOpacity>
 
             {!isDefaultAvatar && (
               <TouchableOpacity
-                style={styles.avatarActionButton}
+                style={[styles.avatarActionButton, { backgroundColor: COLORS.cardBackground }]}
                 onPress={removeProfileImage}
               >
                 <Ionicons name="refresh-outline" size={20} color={COLORS.primary} />
-                <Text style={styles.avatarActionText}>
+                <Text style={[styles.avatarActionText, { color: COLORS.primary }]}>
                   Avatar predefinito
                 </Text>
               </TouchableOpacity>
@@ -189,35 +193,79 @@ const AccountScreen = ({ navigation }) => {
 
         {/* Sezione Informazioni Account */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Informazioni Account</Text>
+          <Text style={[styles.sectionTitle, { color: COLORS.textPrimary }]}>Informazioni Account</Text>
 
-          {/* Email (sola lettura) */}
-          <View style={styles.infoCard}>
+          {/* Email */}
+          <View style={[styles.infoCard, { 
+            backgroundColor: COLORS.cardBackground,
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+          }]}>
             <View style={styles.infoRow}>
               <Ionicons name="mail-outline" size={22} color={COLORS.primary} />
               <View style={styles.infoContent}>
-                <Text style={styles.infoLabel}>Email</Text>
-                <Text style={styles.infoValue}>{email}</Text>
+                <Text style={[styles.infoLabel, { color: COLORS.textSecondary }]}>Email</Text>
+                <Text style={[styles.infoValue, { color: COLORS.textPrimary }]}>{email}</Text>
               </View>
             </View>
           </View>
 
           {/* Password */}
-          <View style={styles.infoCard}>
+          <View style={[styles.infoCard, { 
+            backgroundColor: COLORS.cardBackground,
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+          }]}>
             <View style={styles.infoRow}>
               <Ionicons name="lock-closed-outline" size={22} color={COLORS.primary} />
               <View style={styles.infoContent}>
-                <Text style={styles.infoLabel}>Password</Text>
-                <Text style={styles.infoValue}>••••••••</Text>
+                <Text style={[styles.infoLabel, { color: COLORS.textSecondary }]}>Password</Text>
+                <Text style={[styles.infoValue, { color: COLORS.textPrimary }]}>••••••••</Text>
               </View>
             </View>
             <TouchableOpacity
-              style={styles.changePasswordButton}
+              style={[styles.changePasswordButton, { 
+                borderTopColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+              }]}
               onPress={requestPasswordChange}
             >
-              <Text style={styles.changePasswordText}>Richiedi cambio password</Text>
+              <Text style={[styles.changePasswordText, { color: COLORS.primary }]}>
+                Richiedi cambio password
+              </Text>
               <Ionicons name="chevron-forward" size={20} color={COLORS.primary} />
             </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Preferenze */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: COLORS.textPrimary }]}>Preferenze</Text>
+
+          {/* Tema */}
+          <View style={[styles.infoCard, { 
+            backgroundColor: COLORS.cardBackground,
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+          }]}>
+            <View style={styles.infoRow}>
+              <Ionicons 
+                name={isDark ? "moon" : "sunny"} 
+                size={22} 
+                color={COLORS.primary} 
+              />
+              <View style={styles.infoContent}>
+                <Text style={[styles.infoLabel, { color: COLORS.textSecondary }]}>
+                  Aspetto
+                </Text>
+                <Text style={[styles.infoValue, { color: COLORS.textPrimary }]}>
+                  {isDark ? 'Tema Scuro' : 'Tema Chiaro'}
+                </Text>
+              </View>
+              <Switch
+                value={isDark}
+                onValueChange={handleThemeToggle}
+                trackColor={{ false: '#767577', true: COLORS.primary }}
+                thumbColor={COLORS.white}
+                ios_backgroundColor="#3e3e3e"
+              />
+            </View>
           </View>
         </View>
 
@@ -231,7 +279,6 @@ const AccountScreen = ({ navigation }) => {
           <Text style={styles.logoutText}>Esci dall'account</Text>
         </TouchableOpacity>
 
-        {/* Spazio in basso */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
     </View>
@@ -241,7 +288,6 @@ const AccountScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -250,7 +296,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: COLORS.background,
   },
   backButton: {
     padding: 4,
@@ -258,7 +303,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
     flex: 1,
     textAlign: 'center',
   },
@@ -272,7 +316,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 30,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
     marginBottom: 24,
   },
   avatarContainer: {
@@ -284,20 +327,20 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 60,
     borderWidth: 3,
-    borderColor: COLORS.primary,
+    borderColor: '#FF9800',
   },
   editAvatarButton: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#FF9800',
     width: 40,
     height: 40,
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 3,
-    borderColor: COLORS.background,
+    borderColor: '#1C1C1E',
   },
   avatarActions: {
     flexDirection: 'row',
@@ -310,12 +353,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
-    backgroundColor: COLORS.cardBackground,
   },
   avatarActionText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.primary,
   },
   section: {
     marginBottom: 24,
@@ -323,16 +364,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.white,
     marginBottom: 16,
   },
   infoCard: {
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   infoRow: {
     flexDirection: 'row',
@@ -344,13 +382,11 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 12,
-    color: COLORS.textSecondary,
     marginBottom: 4,
   },
   infoValue: {
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.white,
   },
   changePasswordButton: {
     flexDirection: 'row',
@@ -359,12 +395,10 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.1)',
   },
   changePasswordText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.primary,
   },
   logoutButton: {
     flexDirection: 'row',

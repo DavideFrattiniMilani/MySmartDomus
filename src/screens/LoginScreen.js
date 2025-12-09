@@ -13,12 +13,15 @@ import {
 } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { isDark } = useTheme();
+  const COLORS = getColors(isDark); 
 
   const handleLogin = () => {
     if (!email || !password) {
@@ -40,12 +43,12 @@ const LoginScreen = ({ navigation }) => {
     alert('Funzionalità "Registrati" - Da implementare');
   };
 
-  return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <StatusBar barStyle="light-content" />
+return (
+  <KeyboardAvoidingView
+    style={[styles.container, { backgroundColor: COLORS.background }]}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  >
+    <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
       
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -59,14 +62,14 @@ const LoginScreen = ({ navigation }) => {
               style={styles.logoImage}
               resizeMode="contain"
             />
-            <Text style={styles.logoText}>MySmart Domus</Text>
+            <Text style={[styles.logoText, { color: COLORS.primary }]}>MySmart Domus</Text>
           </View>
         </View>
 
         {/* Titolo e sottotitolo */}
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Login</Text>
-          <Text style={styles.subtitle}>Inserisci le credenziali</Text>
+        <Text style={[styles.title, { color: COLORS.textPrimary }]}>Login</Text>
+        <Text style={[styles.subtitle, { color: COLORS.textSecondary }]}>Inserisci le credenziali</Text>
         </View>
 
         {/* Form di login */}
@@ -96,9 +99,9 @@ const LoginScreen = ({ navigation }) => {
             style={styles.forgotPasswordContainer}
             onPress={handleForgotPassword}
           >
-            <Text style={styles.forgotPasswordText}>
-              Hai dimenticato la password?
-            </Text>
+          <Text style={[styles.forgotPasswordText, { color: COLORS.textSecondary }]}>
+            Hai dimenticato la password?
+          </Text>
           </TouchableOpacity>
 
           {/* Bottone Accedi */}
@@ -112,9 +115,9 @@ const LoginScreen = ({ navigation }) => {
 
           {/* Separatore */}
           <View style={styles.separatorContainer}>
-            <View style={styles.separatorLine} />
-            <Text style={styles.separatorText}>oppure</Text>
-            <View style={styles.separatorLine} />
+          <View style={[styles.separatorLine, { backgroundColor: COLORS.inputBorder }]} />
+          <Text style={[styles.separatorText, { color: COLORS.textSecondary }]}>oppure</Text>
+          <View style={[styles.separatorLine, { backgroundColor: COLORS.inputBorder }]} />
           </View>
 
           {/* Link Registrati */}
@@ -122,7 +125,7 @@ const LoginScreen = ({ navigation }) => {
             style={styles.registerContainer}
             onPress={handleRegister}
           >
-            <Text style={styles.registerText}>Registrati</Text>
+            <Text style={[styles.registerText, { color: COLORS.textPrimary }]}>Registrati</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -133,7 +136,6 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   scrollContent: {
     flexGrow: 1,
@@ -142,21 +144,20 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   logoContainer: {
-    marginBottom: 60, // ✅ Più spazio sotto il logo
+    marginBottom: 60,
   },
   logoRow: {
-    flexDirection: 'row', // ✅ Logo e testo in riga
+    flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
   logoImage: {
-    width: 50,  // ✅ Logo piccolo
+    width: 50,
     height: 50,
   },
   logoText: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.primary,
     letterSpacing: 0,
   },
   headerContainer: {
@@ -165,12 +166,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: COLORS.white,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: COLORS.textSecondary,
   },
   formContainer: {
     flex: 1,
@@ -185,7 +184,6 @@ const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     fontSize: 14,
-    color: COLORS.textSecondary,
   },
   buttonSpacing: {
     marginTop: 8,
@@ -198,11 +196,9 @@ const styles = StyleSheet.create({
   separatorLine: {
     flex: 1,
     height: 1,
-    backgroundColor: COLORS.inputBorder,
   },
   separatorText: {
     fontSize: 14,
-    color: COLORS.textSecondary,
     marginHorizontal: 16,
   },
   registerContainer: {
@@ -211,7 +207,6 @@ const styles = StyleSheet.create({
   },
   registerText: {
     fontSize: 16,
-    color: COLORS.textPrimary,
     fontWeight: '600',
   },
 });

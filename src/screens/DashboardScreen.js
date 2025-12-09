@@ -11,7 +11,8 @@ import {
   Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import Icon from '../components/Icon';
 
 const { width } = Dimensions.get('window');
@@ -19,6 +20,8 @@ const { width } = Dimensions.get('window');
 const DashboardScreen = ({ navigation, route }) => {
   const { villa } = route.params || {};
 
+  const { isDark } = useTheme();        
+  const COLORS = getColors(isDark);    
   // Stati
   const [selectedType, setSelectedType] = useState('acqua'); // 'acqua' o 'elettricita'
   const [selectedPeriod, setSelectedPeriod] = useState('giorno'); // giorno, settimana, mese, anno
@@ -56,18 +59,18 @@ const DashboardScreen = ({ navigation, route }) => {
   const config = typeConfig[selectedType];
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+  <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+    <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.iconButton}
         >
-          <Icon name="u_arrow-left" size={24} color={COLORS.white} />
+          <Icon name="u_arrow-left" size={24} color={COLORS.textPrimary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Dashboard</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Dashboard</Text>
         <View style={styles.placeholder} />
       </View>
 
@@ -77,18 +80,21 @@ const DashboardScreen = ({ navigation, route }) => {
       >
         {/* Selector Tipo */}
         <View style={styles.typeSelector}>
-          <Ionicons name={config.icon} size={24} color={COLORS.white} />
-          <Text style={styles.typeLabel}>{config.label}</Text>
+        <Ionicons name={config.icon} size={24} color={COLORS.textPrimary} />
+        <Text style={[styles.typeLabel, { color: COLORS.textPrimary }]}>{config.label}</Text>
           
-          <TouchableOpacity 
-            style={styles.dropdown}
-            onPress={() => {
-              setSelectedType(selectedType === 'acqua' ? 'elettricita' : 'acqua');
-            }}
-          >
-            <Text style={styles.dropdownText}>{config.label}</Text>
-            <Icon name="u_angle-down1" size={20} color={COLORS.white} />
-          </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.dropdown, {
+            backgroundColor: COLORS.cardBackground,
+            borderColor: COLORS.inputBorder
+          }]}
+          onPress={() => {
+            setSelectedType(selectedType === 'acqua' ? 'elettricita' : 'acqua');
+          }}
+        >
+          <Text style={[styles.dropdownText, { color: COLORS.textPrimary }]}>{config.label}</Text>
+          <Icon name="u_angle-down1" size={20} color={COLORS.textPrimary} />
+        </TouchableOpacity>
         </View>
 
         {/* Period Tabs */}
@@ -102,28 +108,29 @@ const DashboardScreen = ({ navigation, route }) => {
               ]}
               onPress={() => setSelectedPeriod(period.id)}
             >
-              <Text
-                style={[
-                  styles.periodTabText,
-                  selectedPeriod === period.id && styles.periodTabTextActive,
-                ]}
-              >
-                {period.label}
-              </Text>
+            <Text
+              style={[
+                styles.periodTabText,
+                { color: COLORS.textSecondary },
+                selectedPeriod === period.id && { color: COLORS.textPrimary },
+              ]}
+            >
+              {period.label}
+            </Text>
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Chart Container */}
-        <View style={styles.chartContainer}>
+        <View style={[styles.chartContainer, { backgroundColor: COLORS.cardBackground }]}>
           {/* Date Navigation */}
           <View style={styles.dateNavigation}>
             <TouchableOpacity style={styles.dateArrow}>
-              <Icon name="u_angle-left" size={20} color={COLORS.white} />
+              <Icon name="u_angle-left" size={20} color={COLORS.textPrimary} />
             </TouchableOpacity>
-            <Text style={styles.dateText}>13 dicembre 2024</Text>
+            <Text style={[styles.dateText, { color: COLORS.textPrimary }]}>13 dicembre 2025</Text>
             <TouchableOpacity style={styles.dateArrow}>
-              <Icon name="u_angle-right" size={20} color={COLORS.white} />
+              <Icon name="u_angle-right" size={20} color={COLORS.textPrimary} />
             </TouchableOpacity>
           </View>
 
@@ -160,17 +167,17 @@ const DashboardScreen = ({ navigation, route }) => {
 
             {/* Y-axis labels */}
             <View style={styles.yAxisLabels}>
-              <Text style={styles.yAxisLabel}>200</Text>
-              <Text style={styles.yAxisLabel}>0</Text>
+            <Text style={[styles.yAxisLabel, { color: COLORS.textSecondary }]}>200</Text>
+            <Text style={[styles.yAxisLabel, { color: COLORS.textSecondary }]}>0</Text>
             </View>
 
             {/* X-axis labels */}
             <View style={styles.xAxisLabels}>
-              <Text style={styles.xAxisLabel}>00.00</Text>
-              <Text style={styles.xAxisLabel}>06.00</Text>
-              <Text style={styles.xAxisLabel}>12.00</Text>
-              <Text style={styles.xAxisLabel}>18.00</Text>
-              <Text style={styles.xAxisLabel}>23.00</Text>
+              <Text style={[styles.xAxisLabel, { color: COLORS.textSecondary }]}>00.00</Text>
+              <Text style={[styles.xAxisLabel, { color: COLORS.textSecondary }]}>06.00</Text>
+              <Text style={[styles.xAxisLabel, { color: COLORS.textSecondary }]}>12.00</Text>
+              <Text style={[styles.xAxisLabel, { color: COLORS.textSecondary }]}>18.00</Text>
+              <Text style={[styles.xAxisLabel, { color: COLORS.textSecondary }]}>23.00</Text>
             </View>
           </View>
         </View>
@@ -178,9 +185,12 @@ const DashboardScreen = ({ navigation, route }) => {
         {/* Stats Cards */}
         <View style={styles.statsContainer}>
           {/* Consumo di oggi */}
-          <View style={styles.statCard}>
-            <Text style={styles.statLabel}>Consumo di oggi</Text>
-            <Text style={styles.statValue}>309.45 kWh</Text>
+          <View style={[styles.statCard, {
+            backgroundColor: COLORS.cardBackground,
+            borderColor: COLORS.inputBorder
+          }]}>
+            <Text style={[styles.statLabel, { color: COLORS.textSecondary }]}>Consumo di oggi</Text>
+            <Text style={[styles.statValue, { color: COLORS.textPrimary }]}>309.45 kWh</Text>
             <View style={styles.statChange}>
               <Ionicons name="trending-up" size={14} color="#34C759" />
               <Text style={[styles.statChangeText, { color: '#34C759' }]}>
@@ -209,7 +219,6 @@ const DashboardScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -225,7 +234,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
     flex: 1,
     textAlign: 'center',
   },
@@ -244,23 +252,19 @@ const styles = StyleSheet.create({
   typeLabel: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
     marginLeft: 12,
     flex: 1,
   },
   dropdown: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.cardBackground,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: COLORS.inputBorder,
   },
   dropdownText: {
     fontSize: 14,
-    color: COLORS.white,
     marginRight: 8,
   },
   periodTabs: {
@@ -275,18 +279,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   periodTabActive: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#FFA74F',
   },
   periodTabText: {
     fontSize: 12,
     fontWeight: '600',
-    color: COLORS.textSecondary,
-  },
-  periodTabTextActive: {
-    color: COLORS.white,
   },
   chartContainer: {
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
@@ -303,7 +302,6 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.white,
   },
   chart: {
     position: 'relative',
@@ -349,7 +347,6 @@ const styles = StyleSheet.create({
   },
   yAxisLabel: {
     fontSize: 10,
-    color: COLORS.textSecondary,
   },
   xAxisLabels: {
     flexDirection: 'row',
@@ -358,7 +355,6 @@ const styles = StyleSheet.create({
   },
   xAxisLabel: {
     fontSize: 10,
-    color: COLORS.textSecondary,
   },
   statsContainer: {
     flexDirection: 'row',
@@ -367,21 +363,17 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: COLORS.inputBorder,
   },
   statLabel: {
     fontSize: 13,
-    color: COLORS.textSecondary,
     marginBottom: 8,
   },
   statValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: COLORS.white,
     marginBottom: 8,
   },
   statChange: {

@@ -9,13 +9,16 @@ import {
   TextInput,
 } from 'react-native';
 import Icon from '../components/Icon';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import { useScenari } from '../context/ScenariContext';
 import { getVillaData } from '../data';
 
 const CreaScenarioScreen = ({ navigation, route }) => {
   const { villaId, } = route.params;
   const { addScenario } = useScenari();
+  const { isDark } = useTheme(); 
+  const COLORS = getColors(isDark);
 
   // State del form
   const [nome, setNome] = useState(route.params?.nome || '');
@@ -104,12 +107,12 @@ const handleNavigateAmbiente = () => {
 };
 
 
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+return (
+  <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+    <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
 <TouchableOpacity
   onPress={() => {
     navigation.reset({
@@ -123,21 +126,25 @@ const handleNavigateAmbiente = () => {
     });
   }}
 >
-  <Icon name="u_angle-left" size={28} color={COLORS.white} />
+  <Icon name="u_angle-left" size={28} color={COLORS.textPrimary} />
 </TouchableOpacity>
 
 
-        <Text style={styles.headerTitle}>Crea nuovo scenario</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Crea nuovo scenario</Text>
         <View style={{ width: 28 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Nome Scenario */}
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Nome scenario</Text>
-          <Text style={styles.sectionDescription}>Abbina un nome allo scenario</Text>
+          <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Nome scenario</Text>
+          <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Abbina un nome allo scenario</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, {
+              backgroundColor: COLORS.cardBackground,
+              color: COLORS.textPrimary,
+              borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+            }]}
             placeholder="Nome"
             placeholderTextColor={COLORS.textSecondary}
             value={nome}
@@ -147,14 +154,18 @@ const handleNavigateAmbiente = () => {
 
         {/* Icona */}
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Icona</Text>
-          <Text style={styles.sectionDescription}>Scegli un'icona da associare</Text>
+          <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Icona</Text>
+          <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Scegli un'icona da associare</Text>
           <View style={styles.iconsGrid}>
             {iconOptions.map(icon => (
               <TouchableOpacity
                 key={icon.nome}
                 style={[
                   styles.iconOption,
+                  {
+                    backgroundColor: COLORS.cardBackground,
+                    borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                  },
                   selectedIcon === icon.nome && styles.iconOptionSelected,
                 ]}
                 onPress={() => setSelectedIcon(icon.nome)}
@@ -162,7 +173,7 @@ const handleNavigateAmbiente = () => {
               <Icon
                 name={icon.nome}
                 size={28}
-                color={selectedIcon === icon.nome ? COLORS.white : COLORS.textSecondary}
+                color={selectedIcon === icon.nome ? COLORS.textPrimary : COLORS.textSecondary}
               />
               </TouchableOpacity>
             ))}
@@ -171,19 +182,25 @@ const handleNavigateAmbiente = () => {
 
         {/* Giorni */}
         <TouchableOpacity
-          style={styles.navigationSection}
+          style={[styles.navigationSection, {
+            backgroundColor: COLORS.cardBackground,
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+          }]}
           onPress={handleNavigateGiorni}
         >
           <View style={styles.navigationHeader}>
             <View>
-              <Text style={styles.sectionLabel}>Giorni</Text>
-              <Text style={styles.sectionDescription}>Scegli i giorni della settimana</Text>
+              <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Giorni</Text>
+              <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Scegli i giorni della settimana</Text>
             </View>
-            <Icon name="u_angle-right" size={20} color={COLORS.white} />
+            <Icon name="u_angle-right" size={20} color={COLORS.textPrimary} />
           </View>
         {selectedDays.length > 0 && (
-        <View style={styles.selectedDaysBox}>
-            <Text style={styles.selectedDaysText}>
+        <View style={[styles.selectedDaysBox, {
+              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.27)' : 'rgba(0, 0, 0, 0.1)',
+              borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+            }]}>
+            <Text style={[styles.selectedDaysText, { color: COLORS.textPrimary }]}>
             {selectedDays.join(', ')}
             </Text>
         </View>
@@ -197,8 +214,8 @@ const handleNavigateAmbiente = () => {
         >
           <View style={styles.navigationHeader}>
             <View>
-              <Text style={styles.sectionLabel}>Ora</Text>
-              <Text style={styles.sectionDescription}>Scegli l'ora di inizio e fine</Text>
+              <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Ora</Text>
+              <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Scegli l'ora di inizio e fine</Text>
             </View>
             <Icon name="u_angle-right" size={20} color={COLORS.white} />
           </View>
@@ -216,8 +233,8 @@ const handleNavigateAmbiente = () => {
         >
           <View style={styles.navigationHeader}>
             <View>
-              <Text style={styles.sectionLabel}>Ambiente e regolazione</Text>
-              <Text style={styles.sectionDescription}>Scegli gli ambienti e gli oggetti da gestire</Text>
+              <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Ambiente e regolazione</Text>
+              <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Scegli gli ambienti e gli oggetti da gestire</Text>
             </View>
             <Icon name="u_angle-right" size={20} color={COLORS.white} />
           </View>
@@ -238,7 +255,10 @@ const handleNavigateAmbiente = () => {
       </ScrollView>
 
       {/* Bottone Crea */}
-      <View style={styles.footer}>
+      <View style={[styles.footer, {
+          backgroundColor: COLORS.background,
+          borderTopColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+        }]}>
         <TouchableOpacity
           style={styles.createButton}
           onPress={handleCreaScenario}
@@ -254,7 +274,6 @@ const handleNavigateAmbiente = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -263,12 +282,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: COLORS.background,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
     flex: 1,
     textAlign: 'center',
   },
@@ -282,23 +299,18 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.white,
     marginBottom: 4,
   },
   sectionDescription: {
     fontSize: 12,
-    color: COLORS.textSecondary,
     marginBottom: 12,
   },
   input: {
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 16,
-    color: COLORS.white,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   iconsGrid: {
     flexDirection: 'row',
@@ -308,13 +320,11 @@ const styles = StyleSheet.create({
 iconOption: {
   width: 70, // ✅ Dimensione fissa
   height: 70, // ✅ Dimensione fissa
-  backgroundColor: COLORS.cardBackground,
   borderRadius: 12,
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
   borderWidth: 2,
-  borderColor: 'rgba(255, 255, 255, 0.1)',
 },
 
 iconsGrid: {
@@ -325,17 +335,15 @@ iconsGrid: {
 },
   
   iconOptionSelected: {
-  backgroundColor: COLORS.primary,
-  borderWidth: 2,
-  borderColor: COLORS.primary,
+    backgroundColor: '#FFA74F',
+    borderWidth: 2,
+    borderColor: '#FFA74F',
   },
   navigationSection: {
     marginBottom: 16,
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   navigationHeader: {
     flexDirection: 'row',
@@ -344,29 +352,23 @@ iconsGrid: {
     marginBottom: 12,
   },
 selectedDaysBox: {
-  backgroundColor: 'rgba(255, 255, 255, 0.27)',
   borderRadius: 8,
   paddingHorizontal: 12,
   paddingVertical: 8,
   borderWidth: 1,
-  borderColor: 'rgba(255, 255, 255, 0.1)',
 },
 selectedDaysText: {
   fontSize: 14,
-  color: COLORS.white,
   fontWeight: '500',
 },
 timeDisplay: {
-  backgroundColor: 'rgba(255, 255, 255, 0.27)',
   borderRadius: 8,
   paddingHorizontal: 12,
   paddingVertical: 8,
   borderWidth: 1,
-  borderColor: 'rgba(255, 255, 255, 0.1)',
 },
 timeDisplayText: {
   fontSize: 14,
-  color: COLORS.white,
   fontWeight: '500',
   textAlign: 'left',
 },
@@ -374,30 +376,24 @@ timeDisplayText: {
    gap: 8,
   },
   selectedDeviceBox: {
-    backgroundColor: 'rgba(255, 255, 255, 0.27)',
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
     selectedDeviceText: {
     fontSize: 14,
-    color: COLORS.white,
     fontWeight: '500',
   },
   bottomSpacer: {
     height: 120,
   },
   footer: {
-    backgroundColor: COLORS.background,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.1)',
   },
   createButton: {
-    backgroundColor: COLORS.primary,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
@@ -406,7 +402,6 @@ timeDisplayText: {
   createButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.background,
   },
 });
 

@@ -1,3 +1,5 @@
+// src/screens/HomeCaseScreen.js
+
 import React, { useState } from 'react';
 import {
   View,
@@ -10,18 +12,22 @@ import {
   ImageBackground,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
 import { useDrawer } from '../context/DrawerContext';
- import Icon from '../components/Icon';
- import { useUser } from '../context/UserContext';
+import { useUser } from '../context/UserContext';
+import { useTheme } from '../context/ThemeContext';
+import Icon from '../components/Icon';
 
 const HomeCaseScreen = ({ navigation }) => {
-const { openDrawer } = useDrawer();
-const { profileImage } = useUser();
+  const { openDrawer } = useDrawer();
+  const { profileImage } = useUser();
+  const { isDark } = useTheme();
+  const COLORS = getColors(isDark);
 
-const handleMenuPress = () => {
-  openDrawer();
-};
+  const handleMenuPress = () => {
+    openDrawer();
+  };
+
   const [ville] = useState([
     {
       id: 1,
@@ -99,7 +105,7 @@ const handleMenuPress = () => {
       {/* Sezione stati sotto la card */}
       <View style={styles.statusContainer}>
         <View style={styles.statusRow}>
-          <Icon name="u_lock-alt" size={16} color={COLORS.white} />
+          <Icon name="u_lock-alt" size={16} color="#FFFFFF" />
           <Text style={styles.statusLabel}>Antintrusione</Text>
           <View style={[styles.statusBadge, styles.statusActive]}>
             <View style={styles.statusDot} />
@@ -107,7 +113,7 @@ const handleMenuPress = () => {
           </View>
         </View>
         <View style={styles.statusRow}>
-          <Icon name="u_webcam" size={16} color={COLORS.white} />
+          <Icon name="u_webcam" size={16} color="#FFFFFF" />
           <Text style={styles.statusLabel}>TVCC</Text>
           <View style={[styles.statusBadge, styles.statusActive]}>
             <View style={styles.statusDot} />
@@ -119,20 +125,20 @@ const handleMenuPress = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {/* Header */}
       <View style={styles.header}>
-      <TouchableOpacity onPress={handleMenuPress} style={styles.iconButton}>
-        <Icon name="u_bars" size={28} color={COLORS.white} />
-      </TouchableOpacity>
+        <TouchableOpacity onPress={handleMenuPress} style={styles.iconButton}>
+          <Icon name="u_bars" size={28} color={COLORS.textPrimary} />
+        </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Scegli una casa</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Scegli una casa</Text>
 
         <View style={styles.headerRight}>
           <TouchableOpacity onPress={handleNotificationPress} style={styles.iconButton}>
-            <Icon name="u_bell" size={24} color={COLORS.white} />
+            <Icon name="u_bell" size={24} color={COLORS.textPrimary} />
             <View style={styles.notificationBadge}>
               <Text style={styles.notificationBadgeText}>3</Text>
             </View>
@@ -164,7 +170,6 @@ const handleMenuPress = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -181,7 +186,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
     flex: 1,
     textAlign: 'center',
   },
@@ -201,10 +205,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: COLORS.background,
+    borderColor: '#000000',
   },
   notificationBadgeText: {
-    color: COLORS.white,
+    color: '#FFFFFF',
     fontSize: 10,
     fontWeight: 'bold',
   },
@@ -214,7 +218,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: COLORS.primary,
+    borderColor: '#FFA74F',
   },
   avatarImage: {
     width: '100%',
@@ -222,21 +226,27 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 24,
+    paddingBottom: 20,
   },
   card: {
+    width: '100%',
     marginBottom: 20,
-    borderRadius: 20,
+    borderRadius: 16,
     overflow: 'hidden',
-    backgroundColor: COLORS.cardBackground,
+    backgroundColor: '#2D2D2D',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   cardImage: {
     width: '100%',
     height: 200,
   },
   imageStyle: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   gradient: {
     flex: 1,
@@ -245,16 +255,17 @@ const styles = StyleSheet.create({
   },
   badgesContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 8,
   },
   badge: {
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 16,
+    borderRadius: 20,
   },
   badgeText: {
-    color: COLORS.white,
+    color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -262,18 +273,19 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   villaName: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: COLORS.white,
+    color: '#FFFFFF',
+    letterSpacing: 0.3,
   },
   villaAddress: {
     fontSize: 14,
-    color: COLORS.textSecondary,
+    color: 'rgba(255, 255, 255, 0.7)',
+    letterSpacing: 0.2,
   },
   statusContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 8,
+    padding: 16,
+    gap: 12,
   },
   statusRow: {
     flexDirection: 'row',
@@ -283,7 +295,7 @@ const styles = StyleSheet.create({
   statusLabel: {
     flex: 1,
     fontSize: 14,
-    color: COLORS.white,
+    color: '#FFFFFF',
     fontWeight: '500',
   },
   statusBadge: {
@@ -293,20 +305,21 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 12,
     gap: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
   statusActive: {
-    backgroundColor: 'rgba(52, 199, 89, 0.15)',
+    backgroundColor: 'rgba(83, 180, 131, 0.2)',
   },
   statusDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#34C759',
+    backgroundColor: '#53B483',
   },
   statusText: {
     fontSize: 12,
     fontWeight: '600',
-    color: COLORS.white,
+    color: '#53B483',
   },
 });
 

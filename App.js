@@ -4,6 +4,7 @@ import AppNavigator from './src/navigation/AppNavigator';
 import { DrawerProvider } from './src/context/DrawerContext';
 import { ScenariProvider } from './src/context/ScenariContext';
 import { UserProvider } from './src/context/UserContext';
+import { ThemeProvider } from './src/context/ThemeContext'; 
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -14,16 +15,18 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return null; 
+    return null;
   }
 
   return (
-    <UserProvider>
-      <DrawerProvider>
-        <ScenariProvider>
-          <AppNavigator />
-        </ScenariProvider>
-      </DrawerProvider>
-    </UserProvider>
+    <ThemeProvider> 
+      <UserProvider>
+        <DrawerProvider>
+          <ScenariProvider>
+            <AppNavigator />
+          </ScenariProvider>
+        </DrawerProvider>
+      </UserProvider>
+    </ThemeProvider>
   );
 }

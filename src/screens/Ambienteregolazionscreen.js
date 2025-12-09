@@ -8,12 +8,15 @@ import {
   StatusBar,
 } from 'react-native';
 import Icon from '../components/Icon';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import { getAmbienti, getPiani } from '../data';
 
 const AmbienteRegolazionScreen = ({ navigation, route }) => {
   const { villaId, selectedDevices: initialDevices = [] } = route.params || {};
   const [selectedDevices, setSelectedDevices] = useState(initialDevices);
+  const { isDark } = useTheme();     
+  const COLORS = getColors(isDark);   
   
   // Recupera piani dalla villa
   const piani = getPiani(villaId);
@@ -59,16 +62,16 @@ const handleSave = () => {
     return selectedDevices.some(d => d.ambienteId === ambienteId && d.luceId === luceId);
   };
 
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+return (
+  <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+    <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon  name="u_angle-left" size={28} color={COLORS.white} />
+          <Icon  name="u_angle-left" size={28} color={COLORS.textPrimary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Ambiente e regolazione</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Ambiente e regolazione</Text>
         <View style={{ width: 28 }} />
       </View>
 
@@ -76,10 +79,13 @@ const handleSave = () => {
         {/* Dropdown Piano */}
         <View style={styles.dropdownContainer}>
           <TouchableOpacity
-            style={styles.dropdownButton}
+            style={[styles.dropdownButton, {
+              backgroundColor: COLORS.cardBackground,
+              borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+            }]}
             onPress={() => setDropdownOpen(!dropdownOpen)}
           >
-            <Text style={styles.dropdownButtonText}>{selectedPiano}</Text>
+            <Text style={[styles.dropdownButtonText, { color: COLORS.textPrimary }]}>{selectedPiano}</Text>
           <Icon
             name={dropdownOpen ? 'u_angle-up' : 'u_angle-down1'}
             size={20}
@@ -88,12 +94,16 @@ const handleSave = () => {
           </TouchableOpacity>
 
           {dropdownOpen && (
-            <View style={styles.dropdownMenu}>
+            <View style={[styles.dropdownMenu, { 
+                backgroundColor: COLORS.cardBackground,
+                borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+              }]}>
               {piani.map(piano => (
                 <TouchableOpacity
                   key={piano}
                   style={[
                     styles.dropdownItem,
+                    { borderBottomColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)' },
                     selectedPiano === piano && styles.dropdownItemSelected,
                   ]}
                   onPress={() => {
@@ -104,7 +114,8 @@ const handleSave = () => {
                   <Text
                     style={[
                       styles.dropdownItemText,
-                      selectedPiano === piano && styles.dropdownItemTextSelected,
+                      { color: COLORS.textPrimary },
+                      selectedPiano === piano && { color: COLORS.primary, fontWeight: '600' },
                     ]}
                   >
                     {piano}
@@ -121,31 +132,36 @@ const handleSave = () => {
             {ambientiPerPiano.map(ambiente => (
               <View key={ambiente.id} style={styles.ambienteGroup}>
                 {/* Titolo Ambiente */}
-                <Text style={styles.ambienteSectionTitle}>{ambiente.nome}</Text>
+                <Text style={[styles.sectionTitle, { color: COLORS.textPrimary }]}>{ambiente.nome}</Text>
 
                 {/* Luci dell'Ambiente */}
                 {ambiente.dispositivi?.luci && ambiente.dispositivi.luci.length > 0 && (
                   <View style={styles.luciList}>
                     {ambiente.dispositivi.luci.map(luce => (
-                      <TouchableOpacity
-                        key={luce.id}
-                        style={[
-                          styles.luceItem,
-                          isDeviceSelected(ambiente.id, luce.id) && styles.luceItemSelected,
-                        ]}
+                    <TouchableOpacity
+                      key={luce.id}
+                      style={[
+                        styles.luceItem,
+                        {
+                          backgroundColor: COLORS.cardBackground,
+                          borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                        },
+                        isDeviceSelected(ambiente.id, luce.id) && styles.luceItemSelected,
+                      ]}
                         onPress={() => toggleDevice(ambiente.id, luce.id, luce.nome, ambiente.nome)}
                       >
                         <View
                           style={[
                             styles.checkbox,
+                            { borderColor: COLORS.textSecondary },
                             isDeviceSelected(ambiente.id, luce.id) && styles.checkboxSelected,
                           ]}
                         >
                           {isDeviceSelected(ambiente.id, luce.id) && (
-                            <Icon name="u_check" size={14} color={COLORS.white} />
+                            <Icon name="u_check" size={14} color={COLORS.textPrimary} />
                           )}
                         </View>
-                        <Text style={styles.luceName}>{luce.nome}</Text>
+                        <Text style={[styles.luceName, { color: COLORS.textPrimary }]}>{luce.nome}</Text>
                       </TouchableOpacity>
                     ))}
                   </View>
@@ -153,7 +169,7 @@ const handleSave = () => {
 
                 {/* Se non ha luci */}
                 {(!ambiente.dispositivi?.luci || ambiente.dispositivi.luci.length === 0) && (
-                  <Text style={styles.noDevices}>Nessuna luce in questo ambiente</Text>
+                  <Text style={[styles.label, { color: COLORS.textSecondary }]}>Nessuna luce in questo ambiente</Text>
                 )}
               </View>
             ))}
@@ -161,14 +177,19 @@ const handleSave = () => {
         )}
 
         {ambientiPerPiano.length === 0 && (
-          <Text style={styles.noAmbientes}>Nessun ambiente in questo piano</Text>
+          <Text style={[styles.noAmbientes, { color: COLORS.textSecondary }]}>
+            Nessun ambiente in questo piano
+          </Text>
         )}
 
         <View style={styles.bottomSpacer} />
       </ScrollView>
 
       {/* Footer Button */}
-      <View style={styles.footer}>
+      <View style={[styles.footer, {
+          backgroundColor: COLORS.background,
+          borderTopColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+        }]}>
         <TouchableOpacity
           style={styles.saveButton}
           onPress={handleSave}
@@ -184,7 +205,6 @@ const handleSave = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -193,12 +213,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: COLORS.background,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
     flex: 1,
     textAlign: 'center',
   },
@@ -213,42 +231,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   dropdownButtonText: {
     fontSize: 16,
-    color: COLORS.white,
     fontWeight: '500',
   },
   dropdownMenu: {
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 12,
     marginTop: 8,
     borderWidth: 1,
-    borderColor: COLORS.primary,
     overflow: 'hidden',
   },
   dropdownItem: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
   },
   dropdownItemSelected: {
     backgroundColor: 'rgba(255, 152, 0, 0.15)',
   },
   dropdownItemText: {
     fontSize: 16,
-    color: COLORS.white,
   },
   dropdownItemTextSelected: {
-    color: COLORS.primary,
     fontWeight: '600',
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 12,
   },
   ambientiSection: {
     gap: 20,
@@ -256,30 +271,20 @@ const styles = StyleSheet.create({
   ambienteGroup: {
     marginBottom: 12,
   },
-  ambienteSectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: COLORS.white,
-    marginBottom: 10,
-    paddingHorizontal: 4,
-    textTransform: 'capitalize',
-  },
   luciList: {
     gap: 8,
   },
   luceItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
     gap: 12,
   },
   luceItemSelected: {
-    borderColor: COLORS.primary,
+    borderColor: '#FFA74F',
     backgroundColor: 'rgba(255, 152, 0, 0.1)',
   },
   checkbox: {
@@ -287,30 +292,30 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 3,
     borderWidth: 2,
-    borderColor: COLORS.textSecondary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkboxSelected: {
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
+    backgroundColor: '#FFA74F',
+    borderColor: '#FFA74F',
   },
   luceName: {
     flex: 1,
     fontSize: 14,
-    color: COLORS.white,
     fontWeight: '500',
+  },
+  label: {
+    fontSize: 14,
+    fontStyle: 'italic',
   },
   noDevices: {
     fontSize: 14,
-    color: COLORS.textSecondary,
     fontStyle: 'italic',
     textAlign: 'center',
     paddingVertical: 16,
   },
   noAmbientes: {
     fontSize: 14,
-    color: COLORS.textSecondary,
     fontStyle: 'italic',
     textAlign: 'center',
     paddingVertical: 32,
@@ -319,14 +324,12 @@ const styles = StyleSheet.create({
     height: 100,
   },
   footer: {
-    backgroundColor: COLORS.background,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.1)',
   },
   saveButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#FFA74F',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
@@ -335,7 +338,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.background,
+    color: '#000000',
   },
 });
 

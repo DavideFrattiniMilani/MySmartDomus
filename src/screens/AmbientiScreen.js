@@ -9,7 +9,8 @@ import {
   Image,
 } from 'react-native';
 import Icon from '../components/Icon';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 import RoomCard from '../components/RoomCard';
 import FloorDropdown from '../components/FloorDropdown';
 import { getVillaData, getPiani } from '../data';
@@ -24,6 +25,8 @@ const AmbientiScreen = ({ navigation, route }) => {
   
   const [selectedFloor, setSelectedFloor] = useState(floors[0] || 'Piano terra');
   const { profileImage } = useUser();
+  const { isDark } = useTheme();     
+  const COLORS = getColors(isDark);     
 
   // Filtra ambienti per piano selezionato
   const ambientiPiano = villaData?.ambienti.filter(
@@ -48,40 +51,40 @@ const AmbientiScreen = ({ navigation, route }) => {
     navigation.navigate('Account');
   };
 
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+return (
+  <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+    <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
         <TouchableOpacity 
           onPress={() => navigation.goBack()} 
           style={styles.iconButton}
         >
-          <Icon name="u_arrow-left" size={24} color={COLORS.white} />
+          <Icon name="u_arrow-left" size={24} color={COLORS.textPrimary} />
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>Ambienti</Text>
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Ambienti</Text>
 
         <View style={styles.headerRight}>
           <TouchableOpacity
             onPress={handleNotificationPress}
             style={styles.iconButton}
           >
-            <Icon name="u_bell" size={24} color={COLORS.white} />
-            <View style={styles.notificationBadge}>
+            <Icon name="u_bell" size={24} color={COLORS.textPrimary} />
+            <View style={[styles.notificationBadge, { borderColor: COLORS.background }]}>
               <Text style={styles.notificationBadgeText}>3</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleProfilePress}>
-            <View style={styles.avatar}>
-              <Image
-                source={{ uri: profileImage }}
-                style={styles.avatarImage}
-              />
-            </View>
-          </TouchableOpacity>
+        <TouchableOpacity onPress={handleProfilePress}>
+          <View style={styles.avatar}>
+            <Image
+              source={{ uri: profileImage }}
+              style={styles.avatarImage}
+            />
+          </View>
+        </TouchableOpacity>
         </View>
       </View>
 
@@ -103,12 +106,12 @@ const AmbientiScreen = ({ navigation, route }) => {
           keyExtractor={(item) => item.id.toString()}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Icon name="u_home-alt" size={24} color={COLORS.white} />
-              <Text style={styles.emptyText}>
-                Nessuna stanza in questo piano
-              </Text>
-            </View>
+          <View style={styles.emptyContainer}>
+            <Icon name="u_home-alt" size={24} color={COLORS.textPrimary} />
+            <Text style={[styles.emptyText, { color: COLORS.textSecondary }]}>
+              Nessuna stanza in questo piano
+            </Text>
+          </View>
           }
         />
       </View>
@@ -119,7 +122,6 @@ const AmbientiScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -136,7 +138,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
     flex: 1,
     textAlign: 'center',
   },
@@ -156,10 +157,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: COLORS.background,
   },
   notificationBadgeText: {
-    color: COLORS.white,
+    color: '#FFFFFF',
     fontSize: 10,
     fontWeight: 'bold',
   },
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: COLORS.primary,
+    borderColor: '#FFA74F',
   },
   avatarImage: {
     width: '100%',
@@ -186,7 +186,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: COLORS.textSecondary,
     marginTop: 16,
   },
 });
