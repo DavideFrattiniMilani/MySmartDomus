@@ -51,7 +51,7 @@ const DrawerMenu = ({ navigation, visible, onClose }) => {
       icon: 'settings-outline',
       action: () => {
         if (navigation && navigation.navigate) {
-          navigation.navigate('Impostazioni');
+          navigation.navigate('Account');
         }
       },
     },

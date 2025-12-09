@@ -1,6 +1,8 @@
 // src/constants/colors.js
 // Colori aggiornati secondo le linee guida MySmartDomus
 
+
+
 export const COLORS = {
   // ===== PRIMARY COLORS =====
   primary: '#FFA74F',        // Orange (aggiornato dalle linee guida)

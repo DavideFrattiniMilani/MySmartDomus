@@ -3,6 +3,7 @@ import { useFonts } from 'expo-font';
 import AppNavigator from './src/navigation/AppNavigator';
 import { DrawerProvider } from './src/context/DrawerContext';
 import { ScenariProvider } from './src/context/ScenariContext';
+import { UserProvider } from './src/context/UserContext';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -13,14 +14,16 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return null; // Oppure uno splash screen
+    return null; 
   }
 
   return (
-    <DrawerProvider>
-      <ScenariProvider>
-        <AppNavigator />
-      </ScenariProvider>
-    </DrawerProvider>
+    <UserProvider>
+      <DrawerProvider>
+        <ScenariProvider>
+          <AppNavigator />
+        </ScenariProvider>
+      </DrawerProvider>
+    </UserProvider>
   );
 }

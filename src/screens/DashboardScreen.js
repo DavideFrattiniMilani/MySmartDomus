@@ -1,4 +1,4 @@
-// src/screens/StatsScreen.js (rinominato in DashboardScreen)
+// src/screens/DashboardScreen
 
 import React, { useState } from 'react';
 import {

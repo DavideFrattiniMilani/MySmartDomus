@@ -17,6 +17,7 @@ import SectionHeader from '../components/SectionHeader';
 import IntrusionCard from '../components/IntrusionCard';
 import { useDrawer } from '../context/DrawerContext';
 import { useScenari } from '../context/ScenariContext';
+import { useUser } from '../context/UserContext';
 
 const VillaDetailScreen = ({ navigation, route }) => {
   const { openDrawer } = useDrawer();
@@ -34,6 +35,7 @@ const VillaDetailScreen = ({ navigation, route }) => {
 
   // Scenari dal context
   const { getScenari, toggleScenario } = useScenari();
+  const { profileImage } = useUser();
   const scenari = getScenari(villaId);
 
   const handleMenuPress = () => {
@@ -45,7 +47,7 @@ const VillaDetailScreen = ({ navigation, route }) => {
   };
 
   const handleProfilePress = () => {
-    alert('Profilo utente - Da implementare');
+    navigation.navigate('Account');
   };
 
   const handleWeatherPress = () => {
@@ -121,7 +123,7 @@ const getScenarioIcon = (tipo) => {
           <TouchableOpacity onPress={handleProfilePress}>
             <View style={styles.avatar}>
               <Image
-                source={{ uri: 'https://i.pravatar.cc/100?img=12' }}
+                source={{ uri: profileImage }}
                 style={styles.avatarImage}
               />
             </View>

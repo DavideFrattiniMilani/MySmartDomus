@@ -15,6 +15,7 @@ import CreaScenarioScreen from '../screens/CreaScenarioScreen';
 import GiorniScreen from '../screens/Giorniscreen';
 import OraScreen from '../screens/Orascreen';
 import AmbienteRegolazionScreen from '../screens/Ambienteregolazionscreen';
+import AccountScreen from '../screens/AccountScreen';
 import DrawerMenu from '../components/DrawerMenu';
 import { useDrawer } from '../context/DrawerContext';
 import { COLORS } from '../constants/colors';
@@ -83,7 +84,13 @@ const NavigationStack = () => {
         name="Impostazioni" 
         component={ImpostazioniScreen}
       />
-      
+
+      {/* Schermata Account */}
+      <Stack.Screen 
+        name="Account" 
+        component={AccountScreen}
+      />
+
       {/* Scenari Routes */}
       <Stack.Screen 
         name="ScenariList" 

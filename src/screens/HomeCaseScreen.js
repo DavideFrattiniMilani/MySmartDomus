@@ -13,9 +13,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../constants/colors';
 import { useDrawer } from '../context/DrawerContext';
  import Icon from '../components/Icon';
+ import { useUser } from '../context/UserContext';
 
 const HomeCaseScreen = ({ navigation }) => {
 const { openDrawer } = useDrawer();
+const { profileImage } = useUser();
 
 const handleMenuPress = () => {
   openDrawer();
@@ -59,7 +61,7 @@ const handleMenuPress = () => {
   };
 
   const handleProfilePress = () => {
-    alert('Profilo utente');
+    navigation.navigate('Account');
   };
 
   const renderVillaCard = ({ item }) => (
@@ -139,7 +141,7 @@ const handleMenuPress = () => {
           <TouchableOpacity onPress={handleProfilePress}>
             <View style={styles.avatar}>
               <Image
-                source={{ uri: 'https://i.pravatar.cc/100?img=12' }}
+                source={{ uri: profileImage }}
                 style={styles.avatarImage}
               />
             </View>

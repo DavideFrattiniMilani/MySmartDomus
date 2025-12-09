@@ -13,6 +13,7 @@ import { COLORS } from '../constants/colors';
 import RoomCard from '../components/RoomCard';
 import FloorDropdown from '../components/FloorDropdown';
 import { getVillaData, getPiani } from '../data';
+import { useUser } from '../context/UserContext';
 
 const AmbientiScreen = ({ navigation, route }) => {
   const villaId = route?.params?.villaId || 1;
@@ -22,6 +23,7 @@ const AmbientiScreen = ({ navigation, route }) => {
   const floors = getPiani(villaId);
   
   const [selectedFloor, setSelectedFloor] = useState(floors[0] || 'Piano terra');
+  const { profileImage } = useUser();
 
   // Filtra ambienti per piano selezionato
   const ambientiPiano = villaData?.ambienti.filter(
@@ -43,7 +45,7 @@ const AmbientiScreen = ({ navigation, route }) => {
   };
 
   const handleProfilePress = () => {
-    alert('Profilo utente');
+    navigation.navigate('Account');
   };
 
   return (
@@ -75,7 +77,7 @@ const AmbientiScreen = ({ navigation, route }) => {
           <TouchableOpacity onPress={handleProfilePress}>
             <View style={styles.avatar}>
               <Image
-                source={{ uri: 'https://i.pravatar.cc/100?img=12' }}
+                source={{ uri: profileImage }}
                 style={styles.avatarImage}
               />
             </View>
