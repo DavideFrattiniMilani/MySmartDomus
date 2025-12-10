@@ -1,3 +1,5 @@
+// src/screens/StanzaScreen.js
+
 import React, { useState } from 'react';
 import {
   View,
@@ -7,48 +9,33 @@ import {
   TouchableOpacity,
   StatusBar,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import { getColors } from '../constants/colors';
 import { useTheme } from '../context/ThemeContext';
-import DispositivoPanel from '../components/DispositivoPanel';
 import Icon from '../components/Icon';
 
 const { width, height } = Dimensions.get('window');
 
 const StanzaScreen = ({ navigation, route }) => {
   const { room } = route.params;
-  const dispositivi = room.dispositivi?.luci || room.dispositivi || [];
-  const [selectedDevice, setSelectedDevice] = useState(null);
-  const [panelVisible, setPanelVisible] = useState(false);
+  const { isDark } = useTheme();
+  const COLORS = getColors(isDark);
   
-  const { isDark } = useTheme();    
-  const COLORS = getColors(isDark);    
+  // Converti dispositivi da nuovo formato a vecchio (se necessario)
+  const dispositivi = room.dispositivi?.luci || room.dispositivi || [];
+  
+  // State per gestire on/off delle luci
+  const [luci, setLuci] = useState(dispositivi);
 
-
-  // Posiziona dispositivi sulla foto (distribuiti automaticamente)
-  const devicePositions = dispositivi.slice(0, 7).map((disp, index) => ({
-    ...disp,
-    top: `${15 + (index * 12)}%`,
-    left: index % 2 === 0 ? '30%' : '70%',
-  }));
-
-const getDeviceIcon = (tipo) => {
-  const iconMap = {
-    luce: 'u_lightbulb',
-    termostato: 'u_temperature-three-quarter',
-    sensore: 'u_wifi',
-    presa: 'u_power',
-    condizionatore: 'u_temperature-three-quarter',
-    tapparella: 'u_blinds',
-    telecamera: 'u_webcam',
-    lucchetto: 'u_lock-alt',
-  };
-  return iconMap[tipo] || 'u_power'; // default
-};
-
-  const handleDevicePress = (device) => {
-    setSelectedDevice(device);
-    setPanelVisible(true);
+  const handleToggleLuce = (luceId) => {
+    setLuci(prevLuci =>
+      prevLuci.map(luce =>
+        luce.id === luceId
+          ? { ...luce, attivo: !luce.attivo, intensita: !luce.attivo ? 75 : 0 }
+          : luce
+      )
+    );
   };
 
   const handleBackPress = () => {
@@ -60,7 +47,7 @@ const getDeviceIcon = (tipo) => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+    <View style={styles.container}>
       <StatusBar barStyle="light-content" />
 
       {/* Foto stanza fullscreen */}
@@ -69,62 +56,69 @@ const getDeviceIcon = (tipo) => {
         style={styles.backgroundImage}
         resizeMode="cover"
       >
-        {/* Overlay scuro leggero */}
+        {/* Overlay leggero */}
         <View style={styles.overlay}>
-          {/* Header */}
+          {/* Header trasparente in alto */}
           <View style={styles.header}>
             <TouchableOpacity onPress={handleBackPress} style={styles.iconButton}>
-            <View style={styles.iconButtonBg}>
-              <Icon name="u_arrow-left" size={24} color="#FFFFFF" />
-            </View>
+              <View style={styles.iconButtonBg}>
+                <Icon name="u_arrow-left" size={24} color={COLORS.white} />
+              </View>
             </TouchableOpacity>
 
             <Text style={styles.headerTitle}>{room.nome}</Text>
 
             <TouchableOpacity onPress={handleSettingsPress} style={styles.iconButton}>
               <View style={styles.iconButtonBg}>
-                <Icon name="u_setting" size={24} color="#FFFFFF" />
+                <Icon name="u_setting" size={24} color={COLORS.white} />
               </View>
             </TouchableOpacity>
           </View>
 
-          {/* Dispositivi posizionati sulla foto */}
-          <View style={styles.devicesContainer}>
-            {devicePositions.map((device) => (
-              <TouchableOpacity
-                key={device.id}
-                style={[
-                  styles.deviceIcon,
-                  {
-                    top: device.top,
-                    left: device.left,
-                    right: device.right,
-                  },
-                ]}
-                onPress={() => handleDevicePress(device)}
-                activeOpacity={0.7}
-              >
-                <View style={styles.deviceIconInner}>
-                  <Icon
-                    name={getDeviceIcon(device.tipo)}
-                    size={24}
-                    color="#FFFFFF"
-                  />
-                </View>
-                {/* Pulse animation per device attivo */}
-                <View style={styles.devicePulse} />
-              </TouchableOpacity>
-            ))}
+          {/* Spacer per pushare le luci in basso */}
+          <View style={{ flex: 1 }} />
+
+          {/* Icone luci in fila orizzontale in basso */}
+          <View style={styles.bottomOverlay}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.luciScrollContainer}
+            >
+              {luci.map((luce) => (
+                <TouchableOpacity
+                  key={luce.id}
+                  style={styles.luceCard}
+                  onPress={() => handleToggleLuce(luce.id)}
+                  activeOpacity={0.7}
+                >
+                  {/* Icona lampadina */}
+                  <View style={[
+                    styles.luceIcon,
+                    { backgroundColor: luce.attivo ? '#FFA74F' : 'rgba(128, 128, 128, 0.8)' }
+                  ]}>
+                    <Icon
+                      name="u_lightbulb"
+                      size={24}
+                      color="#FFFFFF"
+                    />
+                  </View>
+
+                  {/* Stato ON/OFF */}
+                  <Text style={styles.luceStatus}>
+                    {luce.attivo ? 'ON' : 'OFF'}
+                  </Text>
+
+                  {/* Nome luce abbreviato */}
+                  <Text style={styles.luceNome} numberOfLines={2}>
+                    {luce.nome}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
         </View>
       </ImageBackground>
-
-      {/* Panel regolazione dispositivo */}
-      <DispositivoPanel
-        visible={panelVisible}
-        onClose={() => setPanelVisible(false)}
-        device={selectedDevice}
-      />
     </View>
   );
 };
@@ -139,7 +133,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)', // Overlay molto leggero
   },
   header: {
     flexDirection: 'row',
@@ -168,24 +162,25 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
-  devicesContainer: {
-    flex: 1,
-    position: 'relative',
+  bottomOverlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Sfondo scuro per leggibilità
+    paddingVertical: 16,
+    paddingBottom: 32, // Extra padding per safe area
   },
-  deviceIcon: {
-    position: 'absolute',
-    width: 56,
-    height: 56,
+  luciScrollContainer: {
+    paddingHorizontal: 20,
+    gap: 12,
+  },
+  luceCard: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: -28,
-    marginTop: -28,
+    width: 80,
+    gap: 6,
   },
-  deviceIconInner: {
+  luceIcon: {
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#FFA74F',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -196,13 +191,22 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
-  devicePulse: {
-    position: 'absolute',
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#FFA74F',
-    opacity: 0.3,
+  luceStatus: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  luceNome: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });
 
