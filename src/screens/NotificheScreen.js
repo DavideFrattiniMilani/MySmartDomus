@@ -20,58 +20,46 @@ const NotificheScreen = ({ navigation }) => {
   const COLORS = getColors(isDark);     
 
   // DATI MOCK - Notifiche simulate
-  const [notifiche] = useState([
-    {
-      id: 1,
-      type: 'message',
-      title: 'Lorem ipsum dolor sit amet consectetur',
-      description:
-        'Lorem ipsum dolor sit amet consectetur. Diam ac sit aliquam suspendisse.',
-      link: 'Lorem ipsum',
-      timestamp: '2 ore fa',
-      category: 'tutte',
-    },
-    {
-      id: 2,
-      type: 'alert',
-      title: 'Lorem ipsum dolor sit amet consectetur',
-      description:
-        'Lorem ipsum dolor sit amet consectetur. Diam ac sit aliquam suspendisse.',
-      link: 'Lorem ipsum',
-      timestamp: '2 ore fa',
-      category: 'allarmi',
-    },
-    {
-      id: 3,
-      type: 'warning',
-      title: 'Lorem ipsum dolor sit amet consectetur',
-      description:
-        'Lorem ipsum dolor sit amet consectetur. Diam ac sit aliquam suspendisse.',
-      link: 'Lorem ipsum',
-      timestamp: '2 ore fa',
-      category: 'avvisi',
-    },
-    {
-      id: 4,
-      type: 'message',
-      title: 'Lorem ipsum dolor sit amet consectetur',
-      description:
-        'Lorem ipsum dolor sit amet consectetur. Diam ac sit aliquam suspendisse.',
-      link: 'Lorem ipsum',
-      timestamp: '2 ore fa',
-      category: 'tutte',
-    },
-    {
-      id: 5,
-      type: 'alert',
-      title: 'Lorem ipsum dolor sit amet consectetur',
-      description:
-        'Lorem ipsum dolor sit amet consectetur. Diam ac sit aliquam suspendisse.',
-      link: 'Lorem ipsum',
-      timestamp: '5 ore fa',
-      category: 'allarmi',
-    },
-  ]);
+const [notifiche] = useState([
+  // ===== ALLARMI =====
+  {
+    id: 1,
+    type: 'alert',
+    title: 'Movimento rilevato - Ingresso principale',
+    description: 'Il sensore antintrusione ha rilevato un movimento all\'ingresso principale di Villa Mann.',
+    link: null,
+    timestamp: '5 min fa',
+    category: 'allarmi',
+  },
+  {
+    id: 2,
+    type: 'alert',
+    title: 'Connessione videocamera persa',
+    description: 'La videocamera del giardino di Villa Mann non risponde. Verifica la connessione internet.',
+    link: null,
+    timestamp: '45 min fa',
+    category: 'allarmi',
+  },
+  // ===== AVVISI =====
+  {
+    id: 3,
+    type: 'warning',
+    title: 'Aggiornamento sistema disponibile',
+    description: 'È disponibile un nuovo aggiornamento per il sistema domotico. Aggiorna per ricevere nuove funzionalità e miglioramenti.',
+    link: null,
+    timestamp: '1 ora fa',
+    category: 'avvisi',
+  },
+  {
+    id: 4,
+    type: 'warning',
+    title: 'Scenario "Buongiorno" completato',
+    description: 'Lo scenario "Buongiorno" è stato attivato con successo alle 07:00.',
+    link: null,
+    timestamp: '3 ore fa',
+    category: 'avvisi',
+  },
+]);
 
   // Filtra notifiche in base al tab selezionato
   const notificheFiltrate =
@@ -82,17 +70,12 @@ const NotificheScreen = ({ navigation }) => {
   // Conta notifiche per tipo (per badge)
   const allarmiCount = notifiche.filter((n) => n.category === 'allarmi').length;
 
-  const handleNotificationPress = (notification) => {
-    alert(`Notifica cliccata: ${notification.title}`);
-    // Futuro: navigazione o apertura dettaglio
-  };
-
   const handleBackPress = () => {
     navigation.goBack();
   };
 
   const handleSettingsPress = () => {
-    alert('Impostazioni notifiche - Da implementare');
+    navigation.navigate('ImpostazioniNotifiche');
   };
 
 return (
@@ -140,10 +123,10 @@ return (
             style={[
               styles.tabText,
               { color: COLORS.textSecondary },
-              selectedTab === 'tutte' && { color: COLORS.primary },
+              selectedTab === 'avvisi' && { color: COLORS.primary },
             ]}
           >
-            TUTTE
+            AVVISI
           </Text>
           {selectedTab === 'avvisi' && <View style={[styles.tabIndicator, { backgroundColor: COLORS.primary }]} />}
         </TouchableOpacity>
@@ -157,7 +140,7 @@ return (
             style={[
               styles.tabText,
               { color: COLORS.textSecondary },
-              selectedTab === 'tutte' && { color: COLORS.primary },
+              selectedTab === 'allarmi' && { color: COLORS.primary },
             ]}
           >
             ALLARMI
@@ -178,7 +161,6 @@ return (
         renderItem={({ item }) => (
           <NotificationCard
             notification={item}
-            onPress={() => handleNotificationPress(item)}
           />
         )}
         keyExtractor={(item) => item.id.toString()}

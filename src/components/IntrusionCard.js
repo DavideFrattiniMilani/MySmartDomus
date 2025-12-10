@@ -1,16 +1,50 @@
+// src/components/IntrusionCard.js
+
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Icon from './Icon';
-import { COLORS } from '../constants/colors';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
 
 const IntrusionCard = ({ title, porte, onSeeAll, onTogglePorta }) => {
+  const { isDark } = useTheme();
+  const COLORS = getColors(isDark);
+
+  const handlePortaPress = (porta) => {
+    // Se la porta è attiva (attivare = OK senza conferma)
+    if (!porta.attivo) {
+      // Attivazione diretta, nessuna conferma richiesta
+      onTogglePorta && onTogglePorta(porta.id);
+    } else {
+      // Disattivazione → Richiedi conferma
+      Alert.alert(
+        'Conferma disattivazione',
+        `Sei sicuro di voler disattivare l'antintrusione per "${porta.nome}"?`,
+        [
+          {
+            text: 'Annulla',
+            style: 'cancel',
+          },
+          {
+            text: 'Disattiva',
+            style: 'destructive',
+            onPress: () => {
+              onTogglePorta && onTogglePorta(porta.id);
+            },
+          },
+        ],
+        { cancelable: true }
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Header con titolo e link */}
       <View style={styles.header}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, { color: COLORS.textPrimary }]}>{title}</Text>
         <TouchableOpacity onPress={onSeeAll}>
-          <Text style={styles.seeAllText}>Vedi tutte →</Text>
+          <Text style={[styles.seeAllText, { color: COLORS.primary }]}>Vedi tutte →</Text>
         </TouchableOpacity>
       </View>
 
@@ -19,21 +53,23 @@ const IntrusionCard = ({ title, porte, onSeeAll, onTogglePorta }) => {
         {porte.map((porta) => (
           <TouchableOpacity
             key={porta.id}
-            style={styles.portaRow}
-            onPress={() => onTogglePorta && onTogglePorta(porta.id)}
+            style={[styles.portaRow, { backgroundColor: COLORS.cardBackground }]}
+            onPress={() => handlePortaPress(porta)}
             activeOpacity={0.7}
           >
             {/* Icona lucchetto */}
-            <View style={styles.iconContainer}>
+            <View style={[styles.iconContainer, {
+              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+            }]}>
               <Icon
                 name={porta.attivo ? 'u_lock-alt' : 'u_lock-open-alt'}
                 size={18}
-                color={COLORS.white}
+                color={COLORS.textPrimary}
               />
             </View>
 
             {/* Nome porta */}
-            <Text style={styles.portaNome}>{porta.nome}</Text>
+            <Text style={[styles.portaNome, { color: COLORS.textPrimary }]}>{porta.nome}</Text>
 
             {/* Badge stato */}
             <View
@@ -48,13 +84,13 @@ const IntrusionCard = ({ title, porte, onSeeAll, onTogglePorta }) => {
                   porta.attivo ? styles.badgeDotActive : styles.badgeDotInactive,
                 ]}
               />
-              <Text style={styles.badgeText}>
+              <Text style={[styles.badgeText, { color: COLORS.textPrimary }]}>
                 {porta.attivo ? 'Attivo' : 'Disattivo'}
               </Text>
             </View>
 
             {/* Chevron */}
-<Icon name="u_angle-right" size={20} color={COLORS.white} />
+            <Icon name="u_angle-right" size={20} color={COLORS.textPrimary} />
           </TouchableOpacity>
         ))}
       </View>
@@ -75,11 +111,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.white,
   },
   seeAllText: {
     fontSize: 14,
-    color: COLORS.primary,
     fontWeight: '500',
   },
   porteContainer: {
@@ -88,7 +122,6 @@ const styles = StyleSheet.create({
   portaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 16,
     padding: 16,
     gap: 12,
@@ -97,7 +130,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -105,7 +137,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: '500',
-    color: COLORS.white,
   },
   badge: {
     flexDirection: 'row',
@@ -135,7 +166,6 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 12,
     fontWeight: '600',
-    color: COLORS.white,
   },
 });
 

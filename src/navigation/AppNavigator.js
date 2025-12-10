@@ -20,6 +20,8 @@ import DrawerMenu from '../components/DrawerMenu';
 import { useDrawer } from '../context/DrawerContext';
 import { COLORS } from '../constants/colors';
 import { useNavigation } from '@react-navigation/native';
+import ImpostazioniNotificheScreen from '../screens/ImpostazioniNotificheScreen';
+import AntintrusioneScreen from '../screens/AntintrusioneScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -84,11 +86,21 @@ const NavigationStack = () => {
         name="Impostazioni" 
         component={ImpostazioniScreen}
       />
+      <Stack.Screen 
+        name="ImpostazioniNotifiche" 
+        component={ImpostazioniNotificheScreen}
+      />
 
       {/* Schermata Account */}
       <Stack.Screen 
         name="Account" 
         component={AccountScreen}
+      />
+
+      {/* Schermata Antintrusione */}
+      <Stack.Screen 
+        name="Antintrusione" 
+        component={AntintrusioneScreen}
       />
 
       {/* Scenari Routes */}

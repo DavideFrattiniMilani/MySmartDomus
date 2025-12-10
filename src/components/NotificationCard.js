@@ -1,9 +1,15 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../constants/colors';
+// src/components/NotificationCard.js
 
-const NotificationCard = ({ notification, onPress }) => {
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { getColors } from '../constants/colors';
+import { useTheme } from '../context/ThemeContext';
+
+const NotificationCard = ({ notification }) => {
+  const { isDark } = useTheme();
+  const COLORS = getColors(isDark);
+
   // Determina icona e colore in base al tipo
   const getNotificationStyle = (type) => {
     switch (type) {
@@ -37,11 +43,7 @@ const NotificationCard = ({ notification, onPress }) => {
   const style = getNotificationStyle(notification.type);
 
   return (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
+    <View style={[styles.card, { backgroundColor: COLORS.cardBackground }]}>
       {/* Icona a sinistra */}
       <View style={[styles.iconContainer, { backgroundColor: style.iconBg }]}>
         <Ionicons name={style.icon} size={24} color={style.iconColor} />
@@ -49,33 +51,35 @@ const NotificationCard = ({ notification, onPress }) => {
 
       {/* Contenuto */}
       <View style={styles.content}>
-        <Text style={styles.title} numberOfLines={1}>
+        <Text style={[styles.title, { color: COLORS.textPrimary }]} numberOfLines={2}>
           {notification.title}
         </Text>
-        <Text style={styles.description} numberOfLines={2}>
+        <Text style={[styles.description, { color: COLORS.textSecondary }]}>
           {notification.description}
         </Text>
         {notification.link && (
-          <TouchableOpacity onPress={onPress}>
-            <Text style={styles.link}>{notification.link} →</Text>
-          </TouchableOpacity>
+          <Text style={[styles.link, { color: COLORS.primary }]}>
+            {notification.link}
+          </Text>
         )}
       </View>
 
       {/* Timestamp */}
-      <Text style={styles.timestamp}>{notification.timestamp}</Text>
-    </TouchableOpacity>
+      <Text style={[styles.timestamp, { color: COLORS.textSecondary }]}>
+        {notification.timestamp}
+      </Text>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    backgroundColor: COLORS.cardBackground,
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     alignItems: 'flex-start',
+    minHeight: 80, // ← Altezza minima
   },
   iconContainer: {
     width: 40,
@@ -84,6 +88,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
+    flexShrink: 0, // ← Non si riduce mai
   },
   content: {
     flex: 1,
@@ -92,25 +97,22 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: '600',
-    color: COLORS.white,
     marginBottom: 4,
   },
   description: {
     fontSize: 13,
-    color: COLORS.textSecondary,
     lineHeight: 18,
     marginBottom: 4,
   },
   link: {
     fontSize: 13,
-    color: COLORS.primary,
     fontWeight: '500',
     marginTop: 4,
   },
   timestamp: {
     fontSize: 12,
-    color: COLORS.textSecondary,
     marginTop: 2,
+    flexShrink: 0, // ← Non si riduce mai
   },
 });
 

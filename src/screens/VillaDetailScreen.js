@@ -61,7 +61,7 @@ const VillaDetailScreen = ({ navigation, route }) => {
   };
 
   const handleIntrusioneSeeAll = () => {
-    alert('Vedi tutte le porte - Da implementare');
+    navigation.navigate('Antintrusione', { villaId });
   };
 
   const handleTogglePorta = (portaId) => {

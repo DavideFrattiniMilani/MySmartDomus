@@ -208,41 +208,53 @@ return (
         </TouchableOpacity>
 
         {/* Ora */}
-        <TouchableOpacity
-          style={styles.navigationSection}
-          onPress={handleNavigateOra}
-        >
+          <TouchableOpacity
+            style={[styles.navigationSection, {
+              backgroundColor: COLORS.cardBackground,
+              borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+            }]}
+            onPress={handleNavigateOra}
+          >
           <View style={styles.navigationHeader}>
             <View>
               <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Ora</Text>
               <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Scegli l'ora di inizio e fine</Text>
             </View>
-            <Icon name="u_angle-right" size={20} color={COLORS.white} />
+            <Icon name="u_angle-right" size={20} color={COLORS.textPrimary} />
           </View>
-          <View style={styles.timeDisplay}>
-            <Text style={styles.timeDisplayText}>
+            <View style={[styles.timeDisplay, {
+              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.27)' : 'rgba(0, 0, 0, 0.1)',
+              borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+            }]}>
+              <Text style={[styles.timeDisplayText, { color: COLORS.textPrimary }]}>
               {soloInizio ? `Solo alle ${oraInizio}` : `${oraInizio} - ${oraFine}`}
             </Text>
           </View>
         </TouchableOpacity>
 
         {/* Ambiente e Regolazione */}
-        <TouchableOpacity
-          style={styles.navigationSection}
-          onPress={handleNavigateAmbiente}
-        >
+          <TouchableOpacity
+            style={[styles.navigationSection, {
+              backgroundColor: COLORS.cardBackground,
+              borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+            }]}
+            onPress={handleNavigateAmbiente}
+          >
           <View style={styles.navigationHeader}>
             <View>
               <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Ambiente e regolazione</Text>
               <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Scegli gli ambienti e gli oggetti da gestire</Text>
             </View>
-            <Icon name="u_angle-right" size={20} color={COLORS.white} />
+            <Icon name="u_angle-right" size={20} color={COLORS.textPrimary} />
           </View>
         {selectedDevices.length > 0 && (
         <View style={styles.selectedDevicesContainer}>
             {selectedDevices.map((device, index) => (
-            <View key={index} style={styles.selectedDeviceBox}>
-                <Text style={styles.selectedDeviceText}>
+                <View style={[styles.selectedDeviceBox, {
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.27)' : 'rgba(0, 0, 0, 0.1)',
+                  borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                }]}>
+                  <Text style={[styles.selectedDeviceText, { color: COLORS.textPrimary }]}>
                 {device.ambienteName} - {device.luceName}
                 </Text>
             </View>
@@ -381,7 +393,7 @@ timeDisplayText: {
     paddingVertical: 10,
     borderWidth: 1,
   },
-    selectedDeviceText: {
+  selectedDeviceText: {
     fontSize: 14,
     fontWeight: '500',
   },
@@ -394,6 +406,7 @@ timeDisplayText: {
     borderTopWidth: 1,
   },
   createButton: {
+    backgroundColor: '#FFA74F',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
@@ -402,7 +415,8 @@ timeDisplayText: {
   createButtonText: {
     fontSize: 16,
     fontWeight: '600',
-  },
+    color: '#000000',
+  },  
 });
 
 export default CreaScenarioScreen;
