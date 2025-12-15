@@ -45,13 +45,13 @@ const DashboardScreen = ({ navigation, route }) => {
     acqua: {
       label: 'Acqua',
       icon: 'water',
-      color: '#3B82F6', // Blu
+      color: '#3B82F6', 
       unit: 'L',
     },
     elettricita: {
       label: 'Elettricità',
       icon: 'flash',
-      color: COLORS.primary, // Arancione
+      color: COLORS.primary, 
       unit: 'kWh',
     },
   };

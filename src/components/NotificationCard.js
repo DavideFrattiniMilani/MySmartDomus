@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     alignItems: 'flex-start',
-    minHeight: 80, // ← Altezza minima
+    minHeight: 80, 
   },
   iconContainer: {
     width: 40,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
-    flexShrink: 0, // ← Non si riduce mai
+    flexShrink: 0, 
   },
   content: {
     flex: 1,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   timestamp: {
     fontSize: 12,
     marginTop: 2,
-    flexShrink: 0, // ← Non si riduce mai
+    flexShrink: 0, 
   },
 });
 

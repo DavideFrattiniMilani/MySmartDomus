@@ -1,3 +1,5 @@
+// src/screens/CreaScenarioScreen.js
+
 import React, { useState } from 'react';
 import {
   View,
@@ -12,125 +14,175 @@ import Icon from '../components/Icon';
 import { getColors } from '../constants/colors';
 import { useTheme } from '../context/ThemeContext';
 import { useScenari } from '../context/ScenariContext';
-import { getVillaData } from '../data';
 
 const CreaScenarioScreen = ({ navigation, route }) => {
-  const { villaId, } = route.params;
-  const { addScenario } = useScenari();
-  const { isDark } = useTheme(); 
+  const { villaId, scenario } = route.params;
+  const { addScenario, updateScenario } = useScenari();
+  const { isDark } = useTheme();
   const COLORS = getColors(isDark);
 
-  // State del form
-  const [nome, setNome] = useState(route.params?.nome || '');
-  const [selectedIcon, setSelectedIcon] = useState(route.params?.icon || 'sunny');
-  const [selectedDays, setSelectedDays] = useState(route.params?.selectedDays || []);
-  const [oraInizio, setOraInizio] = useState(route.params?.oraInizio || '08:00');
-  const [oraFine, setOraFine] = useState(route.params?.oraFine || '18:00');
-  const [selectedDevices, setSelectedDevices] = useState(route.params?.selectedDevices || []);
-  const [soloInizio, setSoloInizio] = useState(route.params?.soloInizio || false);
+  // 🔥 MODALITÀ: Edit se scenario esiste, altrimenti Create
+  const isEditMode = !!scenario;
 
-const iconOptions = [
-  { nome: 'u_brightness-low', label: 'Sole' },
-  { nome: 'u_moon', label: 'Luna' },
-  { nome: 'u_bag-alt', label: 'Lavoro' },
-  { nome: 'u_glass-martini', label: 'Festa' },
-  { nome: 'u_dumbbell', label: 'Sport' },
-  { nome: 'u_star', label: 'Compleanni' },
-  { nome: 'u_utensils', label: 'Barbecue' },
-  { nome: 'u_trophy', label: 'Fitness' },
-];
-React.useEffect(() => {
-  if (!route.params) return;
+  // State inizializzato con dati scenario (se edit) o vuoti (se create)
+  const [nome, setNome] = useState(scenario?.nome || '');
+  const [selectedIcon, setSelectedIcon] = useState(scenario?.icon || scenario?.tipo || 'u_brightness-low');
+  const [selectedDays, setSelectedDays] = useState(scenario?.giorni || []);
+  const [oraInizio, setOraInizio] = useState(scenario?.oraInizio || '08:00');
+  const [oraFine, setOraFine] = useState(scenario?.oraFine || '18:00');
+  const [selectedDevices, setSelectedDevices] = useState(scenario?.dispositivi || []);
+  const [soloInizio, setSoloInizio] = useState(scenario?.soloInizio || false);
 
-  setSelectedDays(route.params.selectedDays ?? selectedDays);
-  setOraInizio(route.params.oraInizio ?? oraInizio);
-  setOraFine(route.params.oraFine ?? oraFine);
-  setSoloInizio(
-    route.params.soloInizio !== undefined ? route.params.soloInizio : soloInizio
-  );
-  setSelectedDevices(route.params.selectedDevices ?? selectedDevices);
-}, [route.params]);
+  const iconOptions = [
+    { nome: 'u_brightness-low', label: 'Sole' },
+    { nome: 'u_moon', label: 'Luna' },
+    { nome: 'u_bag-alt', label: 'Lavoro' },
+    { nome: 'u_glass-martini', label: 'Festa' },
+    { nome: 'u_dumbbell', label: 'Sport' },
+    { nome: 'u_star', label: 'Compleanni' },
+    { nome: 'u_utensils', label: 'Barbecue' },
+    { nome: 'u_trophy', label: 'Fitness' },
+  ];
 
+  React.useEffect(() => {
+    if (!route.params) return;
 
-  const handleCreaScenario = () => {
+    // Aggiorna state quando torni da Giorni/Ora/Ambiente
+    if (route.params.selectedDays !== undefined) {
+      setSelectedDays(route.params.selectedDays);
+    }
+    if (route.params.oraInizio !== undefined) {
+      setOraInizio(route.params.oraInizio);
+    }
+    if (route.params.oraFine !== undefined) {
+      setOraFine(route.params.oraFine);
+    }
+    if (route.params.soloInizio !== undefined) {
+      setSoloInizio(route.params.soloInizio);
+    }
+    if (route.params.selectedDevices !== undefined) {
+      setSelectedDevices(route.params.selectedDevices);
+    }
+  }, [route.params]);
+
+  const handleSalva = () => {
     if (!nome.trim()) {
       alert('Inserisci un nome per lo scenario');
       return;
     }
 
-    const newScenario = {
+    const scenarioData = {
       nome,
       tipo: selectedIcon,
       icon: selectedIcon,
-      giorni: selectedDays.length > 0 ? selectedDays : [],
+      giorni: selectedDays,
       oraInizio,
       oraFine,
       dispositivi: selectedDevices,
       soloInizio,
     };
 
-    addScenario(villaId, newScenario);
-    navigation.navigate('VillaTabs', { screen: 'Home' });
-  };
+    if (isEditMode) {
+      // 🔥 MODALITÀ EDIT: Aggiorna scenario esistente
+      updateScenario(villaId, scenario.id, scenarioData);
+    } else {
+      // 🔥 MODALITÀ CREATE: Crea nuovo scenario
+      addScenario(villaId, scenarioData);
+    }
 
-const handleNavigateOra = () => {
-  navigation.navigate('Ora', {
-    villaId,
-    oraInizio,
-    oraFine,
-    soloInizio,
-    selectedDays,
-    selectedDevices,
-  });
-};
-
-const handleNavigateGiorni = () => {
-  navigation.navigate('Giorni', {
-    villaId,
-    selectedDays,
-    oraInizio,
-    oraFine,
-    soloInizio,
-    selectedDevices,
-  });
-};
-
-const handleNavigateAmbiente = () => {
-  navigation.navigate('AmbienteRegolazion', {
-    villaId,
-    selectedDays,
-    oraInizio,
-    oraFine,
-    soloInizio,
-    selectedDevices,
-  });
-};
-
-
-return (
-  <View style={[styles.container, { backgroundColor: COLORS.background }]}>
-    <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
-
-      {/* Header */}
-      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
-<TouchableOpacity
-  onPress={() => {
+    // 🔥 RESET STACK: Torna pulito a VillaDetail
     navigation.reset({
       index: 0,
       routes: [
         { 
           name: 'VillaTabs', 
-          params: { villa: { id: villaId } } 
+          params: { villa: { id: villaId } }
         }
       ],
     });
-  }}
->
-  <Icon name="u_angle-left" size={28} color={COLORS.textPrimary} />
-</TouchableOpacity>
+  };
 
+  const handleNavigateOra = () => {
+    navigation.navigate('Ora', {
+      villaId,
+      oraInizio,
+      oraFine,
+      soloInizio,
+      selectedDays,
+      selectedDevices,
+      nome,
+      selectedIcon,
+      scenario: isEditMode ? scenario : null,
+      isEditMode,
+    });
+  };
 
-        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Crea nuovo scenario</Text>
+  const handleNavigateGiorni = () => {
+    navigation.navigate('Giorni', {
+      villaId,
+      selectedDays,
+      oraInizio,
+      oraFine,
+      soloInizio,
+      selectedDevices,
+      nome,
+      selectedIcon,
+      scenario: isEditMode ? scenario : null,
+      isEditMode,
+    });
+  };
+
+  const handleNavigateAmbiente = () => {
+    navigation.navigate('AmbienteRegolazion', {
+      villaId,
+      selectedDays,
+      oraInizio,
+      oraFine,
+      soloInizio,
+      selectedDevices,
+      nome,
+      selectedIcon,
+      scenario: isEditMode ? scenario : null,
+      isEditMode,
+    });
+  };
+
+  const handleBack = () => {
+    if (isEditMode) {
+      // Se in edit, torna a ScenariList
+      navigation.reset({
+        index: 1,
+        routes: [
+          { name: 'VillaTabs', params: { villa: { id: villaId } } },
+          { name: 'ScenariList', params: { villaId } }
+        ],
+      });
+    } else {
+      // Se in create, torna a VillaDetail
+      navigation.reset({
+        index: 0,
+        routes: [
+          { name: 'VillaTabs', params: { villa: { id: villaId } } }
+        ],
+      });
+    }
+  };
+
+  return (
+    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
+
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor: COLORS.background }]}>
+        <TouchableOpacity onPress={handleBack}>
+          <Icon name="u_angle-left" size={28} color={COLORS.textPrimary} />
+        </TouchableOpacity>
+
+        {/* 🔥 TITOLO DINAMICO */}
+        <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>
+          {isEditMode ? 'Modifica scenario' : 'Crea nuovo scenario'}
+        </Text>
+        
         <View style={{ width: 28 }} />
       </View>
 
@@ -138,7 +190,9 @@ return (
         {/* Nome Scenario */}
         <View style={styles.section}>
           <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Nome scenario</Text>
-          <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Abbina un nome allo scenario</Text>
+          <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>
+            Abbina un nome allo scenario
+          </Text>
           <TextInput
             style={[styles.input, {
               backgroundColor: COLORS.cardBackground,
@@ -155,7 +209,9 @@ return (
         {/* Icona */}
         <View style={styles.section}>
           <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Icona</Text>
-          <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Scegli un'icona da associare</Text>
+          <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>
+            Scegli un'icona da associare
+          </Text>
           <View style={styles.iconsGrid}>
             {iconOptions.map(icon => (
               <TouchableOpacity
@@ -170,11 +226,11 @@ return (
                 ]}
                 onPress={() => setSelectedIcon(icon.nome)}
               >
-              <Icon
-                name={icon.nome}
-                size={28}
-                color={selectedIcon === icon.nome ? COLORS.textPrimary : COLORS.textSecondary}
-              />
+                <Icon
+                  name={icon.nome}
+                  size={28}
+                  color={selectedIcon === icon.nome ? COLORS.textPrimary : COLORS.textSecondary}
+                />
               </TouchableOpacity>
             ))}
           </View>
@@ -191,92 +247,106 @@ return (
           <View style={styles.navigationHeader}>
             <View>
               <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Giorni</Text>
-              <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Scegli i giorni della settimana</Text>
+              <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>
+                Scegli i giorni della settimana
+              </Text>
             </View>
             <Icon name="u_angle-right" size={20} color={COLORS.textPrimary} />
           </View>
-        {selectedDays.length > 0 && (
-        <View style={[styles.selectedDaysBox, {
+          {selectedDays.length > 0 && (
+            <View style={[styles.selectedDaysBox, {
               backgroundColor: isDark ? 'rgba(255, 255, 255, 0.27)' : 'rgba(0, 0, 0, 0.1)',
               borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
             }]}>
-            <Text style={[styles.selectedDaysText, { color: COLORS.textPrimary }]}>
-            {selectedDays.join(', ')}
-            </Text>
-        </View>
-        )}
+              <Text style={[styles.selectedDaysText, { color: COLORS.textPrimary }]}>
+                {selectedDays.join(', ')}
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
 
         {/* Ora */}
-          <TouchableOpacity
-            style={[styles.navigationSection, {
-              backgroundColor: COLORS.cardBackground,
-              borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-            }]}
-            onPress={handleNavigateOra}
-          >
+        <TouchableOpacity
+          style={[styles.navigationSection, {
+            backgroundColor: COLORS.cardBackground,
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+          }]}
+          onPress={handleNavigateOra}
+        >
           <View style={styles.navigationHeader}>
             <View>
               <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Ora</Text>
-              <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Scegli l'ora di inizio e fine</Text>
+              <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>
+                Scegli l'ora di inizio e fine
+              </Text>
             </View>
             <Icon name="u_angle-right" size={20} color={COLORS.textPrimary} />
           </View>
-            <View style={[styles.timeDisplay, {
-              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.27)' : 'rgba(0, 0, 0, 0.1)',
-              borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-            }]}>
-              <Text style={[styles.timeDisplayText, { color: COLORS.textPrimary }]}>
+          <View style={[styles.timeDisplay, {
+            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.27)' : 'rgba(0, 0, 0, 0.1)',
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+          }]}>
+            <Text style={[styles.timeDisplayText, { color: COLORS.textPrimary }]}>
               {soloInizio ? `Solo alle ${oraInizio}` : `${oraInizio} - ${oraFine}`}
             </Text>
           </View>
         </TouchableOpacity>
 
         {/* Ambiente e Regolazione */}
-          <TouchableOpacity
-            style={[styles.navigationSection, {
-              backgroundColor: COLORS.cardBackground,
-              borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-            }]}
-            onPress={handleNavigateAmbiente}
-          >
+        <TouchableOpacity
+          style={[styles.navigationSection, {
+            backgroundColor: COLORS.cardBackground,
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+          }]}
+          onPress={handleNavigateAmbiente}
+        >
           <View style={styles.navigationHeader}>
             <View>
-              <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>Ambiente e regolazione</Text>
-              <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>Scegli gli ambienti e gli oggetti da gestire</Text>
+              <Text style={[styles.sectionLabel, { color: COLORS.textPrimary }]}>
+                Ambiente e regolazione
+              </Text>
+              <Text style={[styles.sectionDescription, { color: COLORS.textSecondary }]}>
+                Scegli gli ambienti e gli oggetti da gestire
+              </Text>
             </View>
             <Icon name="u_angle-right" size={20} color={COLORS.textPrimary} />
           </View>
-        {selectedDevices.length > 0 && (
-        <View style={styles.selectedDevicesContainer}>
-            {selectedDevices.map((device, index) => (
-                <View style={[styles.selectedDeviceBox, {
-                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.27)' : 'rgba(0, 0, 0, 0.1)',
-                  borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                }]}>
+          {selectedDevices.length > 0 && (
+            <View style={styles.selectedDevicesContainer}>
+              {selectedDevices.map((device, index) => (
+                <View 
+                  key={`${device.ambienteName}-${device.luceId || device.luceName}-${index}`}
+                  style={[styles.selectedDeviceBox, {
+                    backgroundColor: isDark ? 'rgba(255, 255, 255, 0.27)' : 'rgba(0, 0, 0, 0.1)',
+                    borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                  }]}
+                >
                   <Text style={[styles.selectedDeviceText, { color: COLORS.textPrimary }]}>
-                {device.ambienteName} - {device.luceName}
-                </Text>
+                    {device.ambienteName} - {device.luceName}
+                  </Text>
+                </View>
+              ))}
             </View>
-            ))}
-        </View>
-        )}
+          )}
         </TouchableOpacity>
 
         <View style={styles.bottomSpacer} />
       </ScrollView>
 
-      {/* Bottone Crea */}
+      {/* Bottone Salva */}
       <View style={[styles.footer, {
-          backgroundColor: COLORS.background,
-          borderTopColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-        }]}>
+        backgroundColor: COLORS.background,
+        borderTopColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+      }]}>
         <TouchableOpacity
-          style={styles.createButton}
-          onPress={handleCreaScenario}
+          style={styles.saveButton}
+          onPress={handleSalva}
           activeOpacity={0.8}
         >
-          <Text style={styles.createButtonText}>Crea scenario</Text>
+          {/* 🔥 TESTO BOTTONE DINAMICO */}
+          <Text style={styles.saveButtonText}>
+            {isEditMode ? 'Salva modifiche' : 'Crea scenario'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -328,24 +398,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
+    justifyContent: 'space-between',
   },
-iconOption: {
-  width: 70, // ✅ Dimensione fissa
-  height: 70, // ✅ Dimensione fissa
-  borderRadius: 12,
-  alignItems: 'center',
-  justifyContent: 'center',
-  overflow: 'hidden',
-  borderWidth: 2,
-},
-
-iconsGrid: {
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  gap: 12,
-  justifyContent: 'space-between', // ✅ Distribuisce meglio
-},
-  
+  iconOption: {
+    width: 70,
+    height: 70,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    borderWidth: 2,
+  },
   iconOptionSelected: {
     backgroundColor: '#FFA74F',
     borderWidth: 2,
@@ -363,29 +426,29 @@ iconsGrid: {
     alignItems: 'flex-start',
     marginBottom: 12,
   },
-selectedDaysBox: {
-  borderRadius: 8,
-  paddingHorizontal: 12,
-  paddingVertical: 8,
-  borderWidth: 1,
-},
-selectedDaysText: {
-  fontSize: 14,
-  fontWeight: '500',
-},
-timeDisplay: {
-  borderRadius: 8,
-  paddingHorizontal: 12,
-  paddingVertical: 8,
-  borderWidth: 1,
-},
-timeDisplayText: {
-  fontSize: 14,
-  fontWeight: '500',
-  textAlign: 'left',
-},
+  selectedDaysBox: {
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+  },
+  selectedDaysText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  timeDisplay: {
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+  },
+  timeDisplayText: {
+    fontSize: 14,
+    fontWeight: '500',
+    textAlign: 'left',
+  },
   selectedDevicesContainer: {
-   gap: 8,
+    gap: 8,
   },
   selectedDeviceBox: {
     borderRadius: 8,
@@ -405,18 +468,18 @@ timeDisplayText: {
     paddingVertical: 12,
     borderTopWidth: 1,
   },
-  createButton: {
+  saveButton: {
     backgroundColor: '#FFA74F',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  createButtonText: {
+  saveButtonText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#000000',
-  },  
+  },
 });
 
 export default CreaScenarioScreen;

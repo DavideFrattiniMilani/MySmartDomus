@@ -12,7 +12,7 @@ import AssistenzaScreen from '../screens/AssistenzaScreen';
 const Tab = createBottomTabNavigator();
 
 const VillaTabNavigator = ({ route }) => {
-  const { villa } = route.params;
+  const villa = route.params?.villa || { id: route.params?.villaId || 1 };
 
   return (
     <Tab.Navigator

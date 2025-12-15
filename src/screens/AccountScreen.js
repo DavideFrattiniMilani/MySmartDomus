@@ -15,7 +15,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { getColors } from '../constants/colors';
 import { useUser } from '../context/UserContext';
-import { useTheme } from '../context/ThemeContext'; // NUOVO
+import { useTheme } from '../context/ThemeContext'; 
 
 const AccountScreen = ({ navigation }) => {
   const { 
@@ -27,7 +27,7 @@ const AccountScreen = ({ navigation }) => {
     DEFAULT_AVATAR
   } = useUser();
 
-  // NUOVO: Hook per il tema
+  // Hook per il tema
   const { isDark, toggleTheme } = useTheme();
   const COLORS = getColors(isDark);
 
@@ -125,7 +125,7 @@ const AccountScreen = ({ navigation }) => {
     );
   };
 
-  // NUOVO: Handler per cambio tema
+  //  Handler per cambio tema
   const handleThemeToggle = async () => {
     try {
       await toggleTheme();

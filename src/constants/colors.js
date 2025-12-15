@@ -45,11 +45,11 @@ export const DARK_COLORS = {
   badgeText: '#FFFFFF',
 };
 
-// ===== TEMA CHIARO (NUOVO) =====
+// ===== TEMA CHIARO  =====
 export const LIGHT_COLORS = {
-  // ===== PRIMARY COLORS (UGUALE) =====
-  primary: '#FFA74F',        // Orange (rimane uguale)
-  primaryDark: '#E88A45',    // Orange più scuro (rimane uguale)
+  // ===== PRIMARY COLORS  =====
+  primary: '#FFA74F',        // Orange 
+  primaryDark: '#E88A45',    // Orange più scuro 
   
   // ===== BACKGROUNDS =====
   background: '#FFFFFF',     // Bianco puro
@@ -57,31 +57,31 @@ export const LIGHT_COLORS = {
   cardBackground: '#F8F8F8',  // Sfondo card chiaro
   
   // ===== TEXTS =====
-  white: '#FFFFFF',          // White (rimane)
+  white: '#FFFFFF',          // White 
   textPrimary: '#000000',    // Nero per testi principali
   textSecondary: '#666666',  // Grigio scuro per testi secondari
-  textOrange: '#FFA74F',     // Orange per testi speciali (rimane)
+  textOrange: '#FFA74F',     // Orange per testi speciali 
   
   // ===== INPUT =====
   inputBackground: '#F0F0F0', // Sfondo input chiaro
   inputBorder: '#D0D0D0',     // Bordo input chiaro
   inputPlaceholder: '#999999', // Testo placeholder
   
-  // ===== MESSAGES - Error (UGUALE) =====
+  // ===== MESSAGES - Error  =====
   error600: '#F34141',       // Error principale
   error700: '#CD3636',       // Error scuro
   
-  // ===== MESSAGES - Warning (UGUALE) =====
+  // ===== MESSAGES - Warning =====
   warning600: '#E9A23B',     // Warning principale
   warning700: '#C8811A',     // Warning scuro
   
-  // ===== MESSAGES - Success (UGUALE) =====
+  // ===== MESSAGES - Success  =====
   success600: '#53B483',     // Success principale
   success700: '#2F9461',     // Success scuro
   
   // ===== UTILITY =====
-  black: '#000000',          // Nero (rimane)
-  transparent: 'transparent', // Trasparente (rimane)
+  black: '#000000',          // Nero 
+  transparent: 'transparent', // Trasparente 
   overlay: 'rgba(0, 0, 0, 0.3)', // Overlay più leggero per tema chiaro
   
   // ===== BADGE =====

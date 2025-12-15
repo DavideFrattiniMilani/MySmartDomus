@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.15)', // Overlay molto leggero
+    backgroundColor: 'rgba(0, 0, 0, 0.15)', 
   },
   header: {
     flexDirection: 'row',
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 4,
   },
   bottomOverlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Sfondo scuro per leggibilità
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', 
     paddingVertical: 16,
     paddingBottom: 32, // Extra padding per safe area
   },

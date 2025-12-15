@@ -12,7 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../constants/colors';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = width - 40; // 20px padding per lato
+const CARD_WIDTH = width - 40; 
 
 const VideoCard = ({ cameras }) => {
   const [activeIndex, setActiveIndex] = useState(0);

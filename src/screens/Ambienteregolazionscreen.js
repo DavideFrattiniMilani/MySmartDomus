@@ -50,12 +50,19 @@ const AmbienteRegolazionScreen = ({ navigation, route }) => {
     });
   };
 
-const handleSave = () => {
-  navigation.navigate('CreaScenario', {
-    ...route.params,
-    selectedDevices,
-  });
-};
+  const handleSave = () => {
+    navigation.navigate('CreaScenario', {
+      villaId: route.params.villaId,
+      selectedDays: route.params.selectedDays,
+      oraInizio: route.params.oraInizio,
+      oraFine: route.params.oraFine,
+      soloInizio: route.params.soloInizio,
+      selectedDevices,
+      nome: route.params.nome,
+      selectedIcon: route.params.selectedIcon,
+      scenario: route.params.scenario,
+    });
+  };
 
 
   const isDeviceSelected = (ambienteId, luceId) => {

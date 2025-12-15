@@ -75,10 +75,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 60,
     paddingBottom: 50,
-    justifyContent: 'space-between', // ✅ Spazio tra logo (alto) e testi (basso)
+    justifyContent: 'space-between', 
   },
   logoSection: {
-    // ✅ Logo in alto a sinistra
     alignItems: 'flex-start',
   },
   logoImage: {
@@ -93,7 +92,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
   },
   bottomSection: {
-    // ✅ Testi e bottone in basso
     width: '100%',
   },
   tagline: {
@@ -108,7 +106,7 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     lineHeight: 24,
     textAlign: 'left',
-    marginBottom: 32, // ✅ Spazio prima del bottone
+    marginBottom: 32, 
   },
   buttonContainer: {
     width: '100%',

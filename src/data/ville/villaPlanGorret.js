@@ -16,7 +16,7 @@ export const villaPlanGorret = {
     data: "14 feb 2025"
   },
   
-  // AMBIENTI (placeholder - da sostituire con dati reali)
+  // AMBIENTI (placeholder)
   ambienti: [
     {
       id: 1,

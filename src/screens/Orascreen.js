@@ -22,17 +22,22 @@ const OraScreen = ({ navigation, route }) => {
   const { isDark } = useTheme();     
   const COLORS = getColors(isDark);     
 
-const handleSave = () => {
-  navigation.navigate('CreaScenario', {
-    ...route.params,
-    oraInizio,
-    oraFine,
-    soloInizio,
-  });
-};
+  const handleSave = () => {
+    navigation.navigate('CreaScenario', {
+      villaId: route.params.villaId,
+      selectedDays: route.params.selectedDays,
+      oraInizio,
+      oraFine,
+      soloInizio,
+      selectedDevices: route.params.selectedDevices,
+      nome: route.params.nome,
+      selectedIcon: route.params.selectedIcon,
+      scenario: route.params.scenario,
+    });
+  };
 
 
-  // Generate time options (every 15 minutes)
+  // Generate time options (ogni 15 minuti)
   const generateTimeOptions = () => {
     const times = [];
     for (let hour = 0; hour < 24; hour++) {

@@ -1,29 +1,84 @@
-import React, { createContext, useContext, useState } from 'react';
+// src/context/ScenariContext.js
+
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getVillaData } from '../data';
 
 const ScenariContext = createContext();
+const STORAGE_KEY = '@scenari_by_villa';
 
 export const ScenariProvider = ({ children }) => {
-  // Stato per gli scenari di tutte le ville
-  // Inizializzato con i dati delle ville
-  const [scenariByVilla, setScenariByVilla] = useState(() => {
-    const initial = {};
-    // Inizializza con gli scenari di ogni villa
-    for (let i = 1; i <= 3; i++) {
-      const villa = getVillaData(i);
-      if (villa && villa.scenari) {
-        initial[i] = villa.scenari.map(s => ({
-          ...s,
-          // Aggiungi campi aggiuntivi per ogni scenario
-          giorni: ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì'],
-          oraInizio: '08:00',
-          oraFine: '18:00',
-          dispositivi: [], // Lista di dispositivi da controllare
-        }));
-      }
+  const [scenariByVilla, setScenariByVilla] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  // CARICA scenari da AsyncStorage al mount
+  useEffect(() => {
+    loadScenari();
+  }, []);
+
+  // SALVA scenari su AsyncStorage ogni volta che cambiano
+  useEffect(() => {
+    if (!loading) {
+      saveScenari();
     }
-    return initial;
-  });
+  }, [scenariByVilla, loading]);
+
+  // Carica scenari salvati
+  const loadScenari = async () => {
+    try {
+      const saved = await AsyncStorage.getItem(STORAGE_KEY);
+      
+      if (saved) {
+        // Usa scenari salvati
+        const parsed = JSON.parse(saved);
+        setScenariByVilla(parsed);
+      } else {
+        // Prima volta: inizializza con scenari di default dalle ville
+        const initial = {};
+        for (let i = 1; i <= 3; i++) {
+          const villa = getVillaData(i);
+          if (villa && villa.scenari) {
+            initial[i] = villa.scenari.map(s => ({
+              ...s,
+              giorni: ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì'],
+              oraInizio: '08:00',
+              oraFine: '18:00',
+              dispositivi: [],
+            }));
+          }
+        }
+        setScenariByVilla(initial);
+      }
+    } catch (error) {
+      console.error('Errore caricamento scenari:', error);
+      // Fallback: usa scenari di default
+      const initial = {};
+      for (let i = 1; i <= 3; i++) {
+        const villa = getVillaData(i);
+        if (villa && villa.scenari) {
+          initial[i] = villa.scenari.map(s => ({
+            ...s,
+            giorni: ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì'],
+            oraInizio: '08:00',
+            oraFine: '18:00',
+            dispositivi: [],
+          }));
+        }
+      }
+      setScenariByVilla(initial);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Salva scenari su AsyncStorage
+  const saveScenari = async () => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(scenariByVilla));
+    } catch (error) {
+      console.error('Errore salvataggio scenari:', error);
+    }
+  };
 
   // Recupera gli scenari di una villa
   const getScenari = (villaId) => {
@@ -47,7 +102,8 @@ export const ScenariProvider = ({ children }) => {
         giorni: newScenario.giorni || [],
         oraInizio: newScenario.oraInizio || '08:00',
         oraFine: newScenario.oraFine || '18:00',
-        dispositivi: newScenario.dispositivi || [], // Array di {ambiente, dispositivi}
+        soloInizio: newScenario.soloInizio || false,
+        dispositivi: newScenario.dispositivi || [],
       };
       
       return {
@@ -111,6 +167,7 @@ export const ScenariProvider = ({ children }) => {
     toggleScenario,
     deleteScenario,
     getScenarioById,
+    loading,
   };
 
   return (

@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
-    backdropFilter: 'blur(10px)', // Effetto blur (non supportato ovunque)
+    backdropFilter: 'blur(10px)', 
   },
   badgeText: {
     color: COLORS.badgeText,

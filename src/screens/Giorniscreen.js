@@ -34,12 +34,19 @@ const GiorniScreen = ({ navigation, route }) => {
     }
   };
 
-const handleSave = () => {
-  navigation.navigate('CreaScenario', {
-    ...route.params,
-    selectedDays,
-  });
-};
+  const handleSave = () => {
+    navigation.navigate('CreaScenario', {
+      villaId: route.params.villaId,
+      selectedDays,
+      oraInizio: route.params.oraInizio,
+      oraFine: route.params.oraFine,
+      soloInizio: route.params.soloInizio,
+      selectedDevices: route.params.selectedDevices,
+      nome: route.params.nome,
+      selectedIcon: route.params.selectedIcon,
+      scenario: route.params.scenario,
+    });
+  };
 
 
 return (
