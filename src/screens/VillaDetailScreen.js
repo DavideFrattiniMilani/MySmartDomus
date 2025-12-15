@@ -53,11 +53,11 @@ const VillaDetailScreen = ({ navigation, route }) => {
   };
 
   const handleWeatherPress = () => {
-    alert('Cambia casa o modifica parametri - Da implementare');
+    alert('In arrivo prossimamente');
   };
 
   const handleVideoCamereSeeAll = () => {
-    alert('Vedi tutte le videocamere - Da implementare');
+    alert('In arrivo prossimamente');
   };
 
   const handleIntrusioneSeeAll = () => {
