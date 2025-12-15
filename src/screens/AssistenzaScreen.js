@@ -19,15 +19,17 @@ const AssistenzaScreen = ({ navigation, route }) => {
   const COLORS = getColors(isDark);
 
   const handleCallAssistance = () => {
-    Linking.openURL('tel:+391234567890');
+    Linking.openURL('tel:+393423903332');
   };
 
   const handleFAQ = () => {
-    alert('Apertura FAQ');
+    alert('FAQ in arrivo prossimamente');
   };
 
   const handleSendMessage = () => {
-    alert('Invia un messaggio');
+    const email = 'sa@milanigiovanni.it';
+    const subject = 'Richiesta assistenza MySmartDomus';    
+    Linking.openURL(`mailto:${email}?subject=${encodeURIComponent(subject)}`);
   };
 
 return (
@@ -60,10 +62,10 @@ return (
 
         {/* Testo informativo */}
         <Text style={[styles.infoText, { color: COLORS.textSecondary }]}>
-          Lorem ipsum dolor sit amet consectetur. Mattis neque a ut nec dolor. 
-          Vulputate vulputate senectus consequat. Risus lobortis semper placerat 
-          congue convallis fermentum mi sit dui. Egestas phasellus consectetur 
-          ornare vitae ornare viverra.
+          {'\n\n'}
+          Orari di assistenza : 08:00 - 18:00{'\n\n'}
+          Per qualsiasi problema o domanda, il nostro team di assistenza è a tua disposizione. 
+          Contattaci telefonicamente o via email e ti risponderemo il prima possibile.
         </Text>
 
         {/* Opzione FAQ */}
@@ -78,7 +80,7 @@ return (
           <View style={styles.optionContent}>
             <Text style={[styles.optionTitle, { color: COLORS.textPrimary }]}>Consulta le FAQ</Text>
             <Text style={[styles.optionDescription, { color: COLORS.textSecondary }]}>
-              Lorem ipsum dolor sit amet consectetur. Mattis neque a ut nec dolor.
+              Trova le risposte alle domande piu frequenti
             </Text>
           </View>
           <Icon name="u_angle-right" size={20} color={COLORS.textPrimary} />
@@ -96,7 +98,7 @@ return (
           <View style={styles.optionContent}>
             <Text style={[styles.optionTitle, { color: COLORS.textPrimary }]}>Invia un messaggio</Text>
             <Text style={[styles.optionDescription, { color: COLORS.textSecondary }]}>
-              Lorem ipsum dolor sit amet consectetur. Mattis neque a ut nec dolor.
+              sa@milanigiovanni.it
             </Text>
           </View>
           <Icon name="u_angle-right" size={20} color={COLORS.textPrimary} />
