@@ -51,6 +51,10 @@ const AmbientiScreen = ({ navigation, route }) => {
     navigation.navigate('Account');
   };
 
+  const handleAssistenzaPress = () => {
+    navigation.navigate('Assistenza');
+  };
+
 return (
   <View style={[styles.container, { backgroundColor: COLORS.background }]}>
     <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
@@ -75,6 +79,10 @@ return (
             <View style={[styles.notificationBadge, { borderColor: COLORS.background }]}>
               <Text style={styles.notificationBadgeText}>3</Text>
             </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleAssistenzaPress}>
+            <Icon name="u_question-circle" size={24} color={COLORS.textPrimary} />
           </TouchableOpacity>
 
         <TouchableOpacity onPress={handleProfilePress}>

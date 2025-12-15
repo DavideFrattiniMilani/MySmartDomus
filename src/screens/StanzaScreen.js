@@ -68,11 +68,11 @@ const StanzaScreen = ({ navigation, route }) => {
 
             <Text style={styles.headerTitle}>{room.nome}</Text>
 
-            <TouchableOpacity onPress={handleSettingsPress} style={styles.iconButton}>
+            {/*<TouchableOpacity onPress={handleSettingsPress} style={styles.iconButton}>
               <View style={styles.iconButtonBg}>
                 <Icon name="u_setting" size={24} color={COLORS.white} />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity>*/}
           </View>
 
           {/* Spacer per pushare le luci in basso */}

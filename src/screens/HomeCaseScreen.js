@@ -70,6 +70,10 @@ const HomeCaseScreen = ({ navigation }) => {
     navigation.navigate('Account');
   };
 
+  const handleAssistenzaPress = () => {
+  navigation.navigate('Assistenza');
+  };
+
   const renderVillaCard = ({ item }) => (
     <TouchableOpacity
       style={styles.card}
@@ -137,17 +141,24 @@ const HomeCaseScreen = ({ navigation }) => {
         <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Scegli una casa</Text>
 
         <View style={styles.headerRight}>
+          {/* Notifiche */}
           <TouchableOpacity onPress={handleNotificationPress} style={styles.iconButton}>
-            <Icon name="u_bell" size={24} color={COLORS.textPrimary} />
+            <Icon name="u_bell" size={24} color={COLORS.white} />
             <View style={styles.notificationBadge}>
               <Text style={styles.notificationBadgeText}>3</Text>
             </View>
           </TouchableOpacity>
 
+          {/* Assistenza */}
+          <TouchableOpacity onPress={handleAssistenzaPress} style={styles.iconButton}>
+            <Icon name="u_question-circle" size={24} color={COLORS.white} />
+          </TouchableOpacity>
+
+          {/* Profilo */}
           <TouchableOpacity onPress={handleProfilePress}>
             <View style={styles.avatar}>
               <Image
-                source={{ uri: profileImage }}
+                source={{ uri: 'https://i.pravatar.cc/100?img=12' }}
                 style={styles.avatarImage}
               />
             </View>

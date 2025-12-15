@@ -78,18 +78,6 @@ const VillaTabNavigator = ({ route }) => {
           tabBarLabel: 'AMBIENTI',
         }}
       />
-      
-      <Tab.Screen
-        name="Assistenza"
-        component={AssistenzaScreen}
-        initialParams={{ villa }}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="u_question-circle" size={size} color={color} />
-          ),
-          tabBarLabel: 'ASSISTENZA',
-        }}
-      />
     </Tab.Navigator>
   );
 };

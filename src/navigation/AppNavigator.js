@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import VillaTabNavigator from './VillaTabNavigator';
 import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/LoginScreen';
+import AssistenzaScreen from '../screens/AssistenzaScreen';
 import HomeCaseScreen from '../screens/HomeCaseScreen';
 import NotificheScreen from '../screens/NotificheScreen';
 import AmbientiScreen from '../screens/AmbientiScreen';
@@ -59,6 +60,12 @@ const NavigationStack = () => {
       <Stack.Screen 
         name="Login" 
         component={LoginScreen}
+      />
+
+
+      <Stack.Screen 
+        name="Assistenza" 
+        component={AssistenzaScreen}
       />
       
       <Stack.Screen 

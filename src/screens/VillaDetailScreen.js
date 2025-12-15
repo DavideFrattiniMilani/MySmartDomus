@@ -122,6 +122,13 @@ const getScenarioIcon = (tipo) => {
             </View>
           </TouchableOpacity>
 
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Assistenza', { villa: villaData })}
+            style={styles.iconButton}
+          >
+            <Icon name="u_question-circle" size={24} color={COLORS.textPrimary} />
+          </TouchableOpacity>
+
           <TouchableOpacity onPress={handleProfilePress}>
             <View style={styles.avatar}>
               <Image
