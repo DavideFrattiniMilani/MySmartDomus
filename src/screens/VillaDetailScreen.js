@@ -84,18 +84,24 @@ const VillaDetailScreen = ({ navigation, route }) => {
     navigation.navigate('CreaScenario', { villaId });
   };
 
-const getScenarioIcon = (tipo) => {
-  const iconMap = {
-    giorno: 'u_brightness-low',
-    notte: 'u_moon',
-    lavoro: 'u_book',
-    festa: 'u_glass-martini',
-    sport: 'u_dumbbell',
-    compleanni: 'u_star',
-    barbecue: 'u_utensils',
+  const getScenarioIcon = (tipo) => {
+    // Se è già un'icona (inizia con 'u_'), usala direttamente
+    if (tipo && tipo.startsWith('u_')) {
+      return tipo;
+    }
+    
+    // Altrimenti mappa i tipi vecchi
+    const iconMap = {
+      giorno: 'u_brightness-low',
+      notte: 'u_moon',
+      lavoro: 'u_book',
+      festa: 'u_glass-martini',
+      sport: 'u_dumbbell',
+      compleanni: 'u_star',
+      barbecue: 'u_utensils',
+    };
+    return iconMap[tipo] || 'u_setting';
   };
-  return iconMap[tipo] || 'u_setting';
-};
   // Prendi solo i primi 3 scenari per la preview
   const scenariPreview = scenari.slice(0, 3);
 

@@ -63,7 +63,14 @@ const CreaScenarioScreen = ({ navigation, route }) => {
     if (route.params.selectedDevices !== undefined) {
       setSelectedDevices(route.params.selectedDevices);
     }
-  }, [route.params]);
+
+      if (route.params.nome !== undefined) {
+    setNome(route.params.nome);
+    }
+    if (route.params.selectedIcon !== undefined) {
+      setSelectedIcon(route.params.selectedIcon);
+    }
+    }, [route.params]);
 
   const handleSalva = () => {
     if (!nome.trim()) {

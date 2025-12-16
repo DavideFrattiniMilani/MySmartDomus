@@ -152,7 +152,7 @@ const ScenariListScreen = ({ navigation, route }) => {
               onPress={() => handleModificaScenario(scenario)}
               activeOpacity={0.7}
             >
-              <Icon name="u_edit" size={18} color={COLORS.primary} />
+              <Text style={[styles.iconText, { color: COLORS.primary }]}>✏️</Text>
             </TouchableOpacity>
 
             {/* Elimina */}
@@ -163,7 +163,7 @@ const ScenariListScreen = ({ navigation, route }) => {
               onPress={() => handleEliminaScenario(scenario)}
               activeOpacity={0.7}
             >
-              <Icon name="u_trash-alt" size={18} color="#FF3B30" />
+              <Text style={[styles.iconText, { color: '#FF3B30' }]}>🗑️</Text>
             </TouchableOpacity>
           </View>
         )}
