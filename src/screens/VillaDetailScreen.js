@@ -21,7 +21,7 @@ import { useScenari } from '../context/ScenariContext';
 import { useUser } from '../context/UserContext';
 
 const VillaDetailScreen = ({ navigation, route }) => {
-  const { openDrawer } = useDrawer();
+  //const { openDrawer } = useDrawer();
   const { isDark } = useTheme();        
   const COLORS = getColors(isDark);
   // Dati villa
@@ -40,9 +40,9 @@ const VillaDetailScreen = ({ navigation, route }) => {
   const { profileImage } = useUser();
   const scenari = getScenari(villaId);
 
-  const handleMenuPress = () => {
+  {/*const handleMenuPress = () => {
     openDrawer();
-  };
+  };*/}
 
   const handleNotificationPress = () => {
     navigation.navigate('Notifiche');
@@ -105,10 +105,18 @@ const getScenarioIcon = (tipo) => {
 
       {/* Header */}
       <View style={[styles.header, { backgroundColor: COLORS.background }]}>
-        <TouchableOpacity onPress={handleMenuPress} style={styles.iconButton}>
+        {/*<TouchableOpacity onPress={handleMenuPress} style={styles.iconButton}>
           <Icon name="u_bars" size={28} color={COLORS.textPrimary} />
-        </TouchableOpacity>
-
+        </TouchableOpacity>*/}
+          <TouchableOpacity onPress={handleProfilePress}>
+            <View style={styles.avatar}>
+              <Image
+                source={{ uri: profileImage }}
+                style={styles.avatarImage}
+              />
+            </View>
+          </TouchableOpacity>
+          
         <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>{villaData.nome}</Text>
 
         <View style={styles.headerRight}>
@@ -129,14 +137,7 @@ const getScenarioIcon = (tipo) => {
             <Icon name="u_question-circle" size={24} color={COLORS.textPrimary} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleProfilePress}>
-            <View style={styles.avatar}>
-              <Image
-                source={{ uri: profileImage }}
-                style={styles.avatarImage}
-              />
-            </View>
-          </TouchableOpacity>
+
         </View>
       </View>
 

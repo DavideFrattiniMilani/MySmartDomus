@@ -9,6 +9,7 @@ import {
   StatusBar,
   TouchableOpacity,
   Image,
+  Alert,
   ImageBackground,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -19,14 +20,14 @@ import { useTheme } from '../context/ThemeContext';
 import Icon from '../components/Icon';
 
 const HomeCaseScreen = ({ navigation }) => {
-  const { openDrawer } = useDrawer();
+  //const { openDrawer } = useDrawer();
   const { profileImage } = useUser();
   const { isDark } = useTheme();
   const COLORS = getColors(isDark);
 
-  const handleMenuPress = () => {
+  {/*const handleMenuPress = () => {
     openDrawer();
-  };
+  };*/}
 
   const [ville] = useState([
     {
@@ -59,7 +60,17 @@ const HomeCaseScreen = ({ navigation }) => {
   ]);
 
   const handleVillaPress = (villa) => {
-    navigation.navigate('VillaTabs', { villa });
+    if (villa.id === 2) {
+      navigation.navigate('VillaTabs', { villa });
+    } else {
+      Alert.alert(
+        '🚧 In arrivo prossimamente',
+        `La proprietà "${villa.nome}" sarà disponibile a breve.\n\nStiamo lavorando per offrirti la migliore esperienza!`,
+        [
+          { text: 'OK', style: 'default' }
+        ]
+      );
+    }
   };
 
   const handleNotificationPress = () => {
@@ -89,6 +100,15 @@ const HomeCaseScreen = ({ navigation }) => {
           colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.7)']}
           style={styles.gradient}
         >
+
+      {/* BADGE "Prossimamente" */}
+      {item.id !== 2 && (
+        <View style={styles.comingSoonBadge}>
+          <Text style={styles.comingSoonText}>Prossimamente</Text>
+        </View>
+      )}
+
+
           {/* Badges in alto */}
           <View style={styles.badgesContainer}>
             {item.badges.map((badge, index) => (
@@ -134,8 +154,17 @@ const HomeCaseScreen = ({ navigation }) => {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={handleMenuPress} style={styles.iconButton}>
+        {/*<TouchableOpacity onPress={handleMenuPress} style={styles.iconButton}>
           <Icon name="u_bars" size={28} color={COLORS.textPrimary} />
+        </TouchableOpacity>*/}
+        {/* Profilo */}
+        <TouchableOpacity onPress={handleProfilePress}>
+          <View style={styles.avatar}>
+            <Image
+              source={{ uri: 'https://i.pravatar.cc/100?img=12' }}
+              style={styles.avatarImage}
+            />
+          </View>
         </TouchableOpacity>
 
         <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>Scegli una casa</Text>
@@ -143,26 +172,18 @@ const HomeCaseScreen = ({ navigation }) => {
         <View style={styles.headerRight}>
           {/* Notifiche */}
           <TouchableOpacity onPress={handleNotificationPress} style={styles.iconButton}>
-            <Icon name="u_bell" size={24} color={COLORS.white} />
-            <View style={styles.notificationBadge}>
+            <Icon name="u_bell" size={24} color={COLORS.textPrimary} />
+            <View style={[styles.notificationBadge, { borderColor: COLORS.background }]}>
               <Text style={styles.notificationBadgeText}>3</Text>
             </View>
           </TouchableOpacity>
 
           {/* Assistenza */}
           <TouchableOpacity onPress={handleAssistenzaPress} style={styles.iconButton}>
-            <Icon name="u_question-circle" size={24} color={COLORS.white} />
+            <Icon name="u_question-circle" size={24} color={COLORS.textPrimary} />
           </TouchableOpacity>
 
-          {/* Profilo */}
-          <TouchableOpacity onPress={handleProfilePress}>
-            <View style={styles.avatar}>
-              <Image
-                source={{ uri: 'https://i.pravatar.cc/100?img=12' }}
-                style={styles.avatarImage}
-              />
-            </View>
-          </TouchableOpacity>
+
         </View>
       </View>
 
@@ -331,6 +352,22 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#53B483',
+  },
+
+    comingSoonBadge: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    backgroundColor: 'rgba(255, 152, 0, 0.95)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    zIndex: 10,
+  },
+  comingSoonText: {
+    color: '#000000',
+    fontSize: 12,
+    fontWeight: '700',
   },
 });
 
